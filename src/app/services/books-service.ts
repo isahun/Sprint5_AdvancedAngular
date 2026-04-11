@@ -11,4 +11,8 @@ export class BooksService {
     { id: '2', title: 'Metafísica de los tubos', author: 'Amélie Nothomb', category: 'Other'},
     { id: '3', title: 'Poesía completa', author:'Alejandra Pizarnik', category: 'Poetry'}
   ]);
+
+  getBook(id:string) {
+    return this.books().find((book) => book.id === id);
+  }
 }
