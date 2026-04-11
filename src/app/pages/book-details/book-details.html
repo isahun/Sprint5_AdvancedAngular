@@ -1,0 +1,32 @@
+<!-- book is a plain class property (Book | undefined), set inside ngOnInit.
+     @if checks if it has a value — if undefined, the @else block renders instead. -->
+
+@if (book) {
+<section class="flex flex-col gap-5 justify-center text-center">
+  <h1>Detalls del llibre</h1>
+
+  <ul>
+    <li>
+      <!-- No () needed — book is a regular property, not a signal.
+             Angular knows it's defined here because we're inside @if (book). -->
+      <p>Títol: {{ book.title }}</p>
+      <p>Autor: {{ book.author }}</p>
+      <p>Categoria: {{ book.category }}</p>
+    </li>
+  </ul>
+
+  <!-- (click) calls goBack() in the component class, which uses Router.navigate() -->
+  <button type="button" (click)="goBack()" class="cursor-pointer bg-blue-300 p-3 h-15 w-15">
+    Torna al llistat
+  </button>
+</section>
+
+} @else {
+<!-- Renders if book is undefined — no match found for the :bookId in the URL -->
+<section class="flex flex-col gap-5 justify-center text-center">
+  <p>No s'ha trobat cap llibre amb aquest identificador.</p>
+  <button type="button" (click)="goBack()" class="cursor-pointer bg-blue-300 p-3">
+    Torna al llistat
+  </button>
+</section>
+}
