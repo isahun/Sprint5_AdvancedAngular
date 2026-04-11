@@ -1,7 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, input, computed } from '@angular/core';
+import { Router } from '@angular/router';
 import { BooksService } from '../../services/books-service';
-import { Book } from '../../interfaces/book.interface';
 
 @Component({
   selector: 'app-book-details',
@@ -9,20 +8,14 @@ import { Book } from '../../interfaces/book.interface';
   templateUrl: './book-details.html',
   styleUrl: './book-details.css',
 })
-export class BookDetails implements OnInit {
-
-  private route = inject(ActivatedRoute);
+export class BookDetails {
 
   service = inject(BooksService);
   router  = inject(Router);
 
-  book: Book | undefined;
+  bookId = input.required<string>();
 
-  ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('bookId');
-
-    this.book = this.service.books().find(b => b.id === id) ?? undefined;
-  }
+  book = computed(() => this.service.getBook(this.bookId()));
 
   goBack() {
     this.router.navigate(['/books']);
