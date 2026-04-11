@@ -23,7 +23,7 @@ export class BookDetails implements OnInit {
 
     this.book = this.service.books().find(b => b.id === id) ?? undefined;
   }
-  
+
   goBack() {
     this.router.navigate(['/books']);
   }
