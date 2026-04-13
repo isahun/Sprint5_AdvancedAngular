@@ -1,86 +1,130 @@
-# Book App - Sprint 5.01: Advanced Angular
+# Book App - Sprint 5.01 - 5.03: Advanced Angular
 
-This repository contains a book-browsing Angular application developed as part of the Sprint 5 curriculum. The focus of this activity was to build a multi-page SPA using Angular Router, signals, services, and modern reactive patterns introduced in Angular 17+.
-
-
-## Objectives
+This repository contains a book-browsing Angular application developed across three activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
 
 
-* Configure client-side routing with Angular Router, including nested routes and a shared Layout.
-* Create a `BooksService` using Angular `signal()` to manage application state.
-* Implement a `BookDetails` page reading route parameters via `input()` and `computed()` instead of `ActivatedRoute`.
-* Organize the project into `pages/`, `services/`, `interfaces/`, and `layout/` directories.
-* Apply Tailwind CSS styles to the application shell and pages.
+## Activity Overview
+
+
+### 5.01 — Basic Routing and Static Routes
+
+The goal of this activity was to configure Angular Router and set up the basic navigation structure of the application.
+
+**Objectives:**
+* Configure the Angular Router.
+* Create and associate components to routes.
+* Implement basic navigation using `routerLink`.
+
+**Steps performed:**
+* Generated a new Angular project `book-app` with standalone components.
+* Created four page components: `Home`, `BookList`, `BookDetails`, `NotFound`.
+* Configured static routes in `app.routes.ts`: root path, `books`, `books/:bookId`, and the `**` wildcard fallback.
+* Added a navigation bar in `app.html` using `routerLink` and `routerLinkActive` with `routerLinkActiveOptions`.
+* Installed **Tailwind CSS** and applied styles to the navigation bar.
+
+
+### 5.02 — Dynamic Routes and Programmatic Navigation
+
+The goal of this activity was to implement dynamic routes for individual book detail pages and navigate between routes programmatically.
+
+**Objectives:**
+* Define routes with URL parameters.
+* Access route parameters using `ActivatedRoute`.
+* Use `Router` for programmatic navigation.
+
+**Steps performed:**
+* Created a `Book` interface (`id`, `title`, `author`, `category`) in a dedicated file.
+* Created `BooksService` with a `signal`-based array of 3 mock books.
+* Updated `BookList` to inject the service and render book links using `[routerLink]="['/books', book.id]"`.
+* Implemented `BookDetails` to read the `bookId` route parameter, look up the book, and display it — with an `@if` fallback for unknown IDs.
+* Added a "Tornar al llistat" button using `Router.navigate()`.
+* Applied Tailwind styles to the list and detail views.
+* **Refactored** `BookDetails` to read the route parameter via `input()` (Input Signal) and `computed()` instead of `ActivatedRoute` + `OnInit`.
+
+
+### 5.03 — Layout Component and Nested Routes
+
+The goal of this activity was to extract the shared application shell into a dedicated `Layout` component and restructure routes as nested children.
+
+**Objectives:**
+* Create a reusable `Layout` component that holds the nav bar and the `<router-outlet>`.
+* Restructure routing so that all page routes are children of the Layout route.
+* Clean up the root `App` component to act only as an entry point.
+
+**Steps performed:**
+* Generated a `Layout` component containing the navigation bar (`RouterLink`, `RouterLinkActive`) and `<router-outlet>`.
+* Refactored `app.routes.ts` to nest `Home`, `BookList`, and `BookDetails` as children of the Layout route, while keeping `NotFound` at the top level.
+* Stripped the navigation markup from `app.html`, leaving only `<router-outlet />`.
+* Cleaned up `App` imports, removing `RouterLinkWithHref` and `RouterLinkActive`.
+* Added `withComponentInputBinding()` to `provideRouter()` in `app.config.ts` to enable automatic route-param-to-input binding.
+* Updated `NotFound` with a `goBack()` method using `Router.navigate()` and applied Tailwind styles.
 
 
 ## Prerequisites
 
 
-To run this project, ensure you have the following versions (or higher) installed:
-
-
 * Node.js: v22.x or higher (v24.x recommended)
 * npm: 11.x or higher
-* Angular CLI: v21.x (`npm install -g @angular/cli`)
+* Angular CLI: v21.x — `npm install -g @angular/cli`
 
 
 ## Installation
 
 
-1. Clone the repository and navigate to the project folder:
-   ```bash
-   git clone <repo-url>
-   cd book-app
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+git clone <repo-url>
+cd book-app
+npm install
+```
 
 
 ## Running the Application
 
 
-Start the development server:
-
 ```bash
 ng serve --open
 ```
 
-The application will open automatically in your browser at `http://localhost:4200`.
+Opens automatically at `http://localhost:4200`.
 
 
-## Core Project Structure
+## Project Structure
 
 
 ```
 src/app/
 ├── interfaces/
-│   └── book.interface.ts       # Book data model
+│   └── book.interface.ts         # Book data model
 ├── services/
-│   └── books-service.ts        # Signal-based data service with mock books
+│   └── books-service.ts          # Signal-based data service with mock books
 ├── layout/
-│   └── layout.ts / .html       # Shared shell: nav + <router-outlet>
+│   └── layout.ts / .html / .css  # Shared shell: nav bar + <router-outlet>
 └── pages/
-    ├── home/                   # Landing page
-    ├── book-list/              # List of all books with route links
-    ├── book-details/           # Detail view for a single book (input + computed)
-    └── not-found/              # 404 fallback page
+    ├── home/                     # Landing page
+    ├── book-list/                # List of all books with dynamic route links
+    ├── book-details/             # Detail view (input() + computed() for route param)
+    └── not-found/                # 404 fallback with programmatic back navigation
 ```
 
 
 ## Key Angular Concepts Practised
 
 
-| Concept | Where |
-|---|---|
-| `signal()` for reactive state | `BooksService` |
-| `input()` for route param binding | `BookDetails` |
-| `computed()` to derive values | `BookDetails.book` |
-| Nested routes with shared Layout | `app.routes.ts` |
-| `withComponentInputBinding()` | `app.config.ts` |
-| `RouterLink` / `RouterLinkActive` | `Layout` |
-| `inject()` instead of constructor DI | `BookDetails`, `NotFound` |
+| Concept | Activity | Where |
+|---|---|---|
+| `routerLink` / `routerLinkActive` | 5.01 | `app.html` → `Layout` |
+| Wildcard and redirect routes | 5.01 | `app.routes.ts` |
+| `BooksService` with `signal()` | 5.02 | `books-service.ts` |
+| Dynamic route param `/:bookId` | 5.02 | `app.routes.ts` |
+| `ActivatedRoute` param reading | 5.02 | `BookDetails` (initial) |
+| `Router.navigate()` | 5.02 | `BookDetails`, `NotFound` |
+| `@if` conditional rendering | 5.02 | `book-details.html` |
+| `input()` for route param binding | 5.02 refactor | `BookDetails` |
+| `computed()` to derive state | 5.02 refactor | `BookDetails.book` |
+| `inject()` instead of constructor DI | 5.02–5.03 | `BookDetails`, `NotFound` |
+| Nested routes with shared Layout | 5.03 | `app.routes.ts` |
+| `withComponentInputBinding()` | 5.03 | `app.config.ts` |
+| Tailwind CSS | 5.01–5.03 | Throughout |
 
 
 ---
