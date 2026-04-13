@@ -1,0 +1,3092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Angular Study Guide — Sprint 5</title>
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:    #dd0031;
+  --red-d:  #a80025;
+  --navy:   #1a2f50;
+  --blue:   #2b5797;
+  --ink:    #1e2433;
+  --muted:  #64748b;
+  --border: #e2e8f0;
+  --bg:     #f8fafc;
+  --white:  #ffffff;
+  --code-bg:#0f1117;
+  --green:  #16a34a;
+  --amber:  #d97706;
+  --purple: #7c3aed;
+  --teal:   #0891b2;
+
+  /* per-step accent colours */
+  --c1:#dd0031; --c2:#be185d; --c3:#7c3aed; --c4:#2563eb;
+  --c5:#0891b2; --c6:#d97706; --c7:#dc2626; --c8:#9333ea;
+  --c9:#0d9373; --c10:#16a34a; --c11:#ea580c; --c12:#be185d;
+  --c13:#4338ca; --c14:#0f766e;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+/* ── LAYOUT ───────────────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ──────────────────────────────────────────────── */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--navy);
+  color: #c8d6f0;
+  padding: 0 0 40px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.15) transparent;
+}
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  margin-bottom: 8px;
+}
+.sidebar-logo .wordmark {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+.sidebar-logo .wordmark span { color: #ff6b6b; }
+.sidebar-logo .sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,.45);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+.sidebar nav { padding: 0 12px; }
+.nav-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,.3);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 12px 12px 6px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background .15s, color .15s;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+.nav-item .num {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800;
+  flex-shrink: 0;
+  color: #fff;
+}
+.nav-item.star .num {
+  background: rgba(255,255,255,.2);
+  font-size: 11px;
+}
+
+/* ── MAIN CONTENT ─────────────────────────────────────────── */
+.main {
+  padding: 0;
+  max-width: 920px;
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, #2b4a7a 50%, var(--red) 100%);
+  padding: 80px 64px 60px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: 'A';
+  position: absolute;
+  right: -20px; top: -40px;
+  font-size: 280px;
+  font-weight: 900;
+  color: rgba(255,255,255,.04);
+  line-height: 1;
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.hero h1 em { font-style: normal; color: #ff9d9d; }
+.hero p {
+  font-size: 16px;
+  color: rgba(255,255,255,.7);
+  max-width: 520px;
+  margin-bottom: 28px;
+}
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.85);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+}
+
+/* ── SECTION ──────────────────────────────────────────────── */
+.section {
+  padding: 52px 64px 40px;
+  border-bottom: 1px solid var(--border);
+}
+.section:last-child { border-bottom: none; }
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.section-num {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.section-meta {}
+.section-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+.section-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ── 2-COL GRID ───────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 20px 0; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+
+/* ── CARD ─────────────────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── CODE BLOCKS ──────────────────────────────────────────── */
+pre {
+  background: var(--code-bg);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 14px 0;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.6;
+  border: 1px solid rgba(255,255,255,.04);
+}
+pre code { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace; color: #e2e8f0; }
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+  font-size: 13px;
+  background: #eef2ff;
+  color: var(--red);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #dde4ff;
+}
+pre code { background: transparent; color: #e2e8f0; padding: 0; border: none; font-size: 13px; }
+
+/* syntax */
+.kw  { color: #f472b6; }   /* keyword */
+.fn  { color: #86efac; }   /* function/method */
+.str { color: #fde68a; }   /* string */
+.cm  { color: #4b5563; }   /* comment */
+.dc  { color: #c4b5fd; }   /* decorator */
+.vr  { color: #93c5fd; }   /* variable */
+.ty  { color: #fdba74; }   /* type */
+.op  { color: #f9a8d4; }   /* operator */
+
+/* ── TABLES ───────────────────────────────────────────────── */
+.table-wrap { margin: 16px 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+thead tr { background: var(--navy); color: #fff; }
+thead th { padding: 11px 16px; text-align: left; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+tbody tr:nth-child(even) { background: #f8fafc; }
+tbody tr:nth-child(odd)  { background: var(--white); }
+tbody td { padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ── CALLOUTS ─────────────────────────────────────────────── */
+.callout {
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  border-left: 4px solid;
+  font-size: 13.5px;
+}
+.callout strong { font-weight: 700; display: block; margin-bottom: 3px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+.callout.tip    { background: #eff6ff; border-color: #3b82f6; }
+.callout.tip strong { color: #2563eb; }
+.callout.warn   { background: #fffbeb; border-color: #f59e0b; }
+.callout.warn strong { color: #d97706; }
+.callout.info   { background: #f0fdf4; border-color: #22c55e; }
+.callout.info strong { color: #16a34a; }
+.callout.key    { background: #faf5ff; border-color: #a855f7; }
+.callout.key strong { color: #9333ea; }
+
+/* ── BADGE ────────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 20px;
+  vertical-align: middle; margin-left: 6px;
+}
+.badge.new     { background: #dcfce7; color: #16a34a; }
+.badge.modern  { background: #ede9fe; color: #7c3aed; }
+.badge.classic { background: #fef3c7; color: #d97706; }
+.badge.project { background: #fee2e2; color: #dc2626; }
+
+/* ── BINDING CARDS ────────────────────────────────────────── */
+.binding-card { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+.binding-header { padding: 10px 16px; color: #fff; font-weight: 700; font-size: 13px; }
+.binding-body { background: var(--code-bg); padding: 14px 16px; font-family: 'SF Mono','Fira Code',Consolas,monospace; font-size: 12.5px; color: #e2e8f0; line-height: 1.6; }
+
+/* ── LIFECYCLE ────────────────────────────────────────────── */
+.lifecycle { display: flex; flex-direction: column; gap: 0; margin: 16px 0 16px 16px; }
+.lc-item { position: relative; padding: 0 0 20px 28px; }
+.lc-item::before { content: ''; position: absolute; left: 7px; top: 12px; bottom: 0; width: 2px; background: var(--border); }
+.lc-item:last-child::before { display: none; }
+.lc-item::after { content: ''; position: absolute; left: 1px; top: 12px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--white); }
+.lc-item.grey::after   { background: #94a3b8; }
+.lc-item.blue::after   { background: #3b82f6; }
+.lc-item.green::after  { background: #22c55e; }
+.lc-item.amber::after  { background: #f59e0b; }
+.lc-item.red::after    { background: #ef4444; }
+.lc-name { font-weight: 700; font-size: 14px; color: var(--navy); }
+.lc-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.lc-use  { font-size: 12px; color: var(--green); font-style: italic; margin-top: 3px; }
+
+/* ── QUICK REF ────────────────────────────────────────────── */
+.qr-block { margin: 16px 0; }
+.qr-block h4 {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted);
+  margin-bottom: 8px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.qr-row {
+  display: flex; align-items: baseline;
+  gap: 12px; padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.qr-row:last-child { border-bottom: none; }
+.qr-label { font-weight: 600; color: var(--navy); min-width: 160px; flex-shrink: 0; }
+.qr-code  { font-family: 'SF Mono','Fira Code',Consolas,monospace; font-size: 12px; color: #374151; }
+
+/* ── H2/H3 ────────────────────────────────────────────────── */
+h2 { font-size: 17px; font-weight: 700; color: var(--navy); margin: 28px 0 10px; }
+h3 { font-size: 14px; font-weight: 700; color: var(--ink); margin: 20px 0 8px; }
+p  { margin: 8px 0; font-size: 14px; color: #374151; }
+
+/* ── FILE TREE ────────────────────────────────────────────── */
+.file-tree {
+  background: var(--code-bg);
+  border-radius: 10px;
+  padding: 18px 22px;
+  font-family: 'SF Mono','Fira Code',Consolas,monospace;
+  font-size: 12.5px;
+  line-height: 1.9;
+  color: #e2e8f0;
+}
+.file-tree .dir  { color: #93c5fd; font-weight: 700; }
+.file-tree .ann  { color: #4b5563; padding-left: 8px; }
+.file-tree .imp  { color: #86efac; }
+
+/* ── SCENARIO CARD ────────────────────────────────────────── */
+.scenario {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.scenario-head {
+  padding: 14px 18px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.scenario-letter {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 15px;
+  flex-shrink: 0;
+}
+.scenario-name { font-weight: 700; font-size: 13.5px; }
+.scenario-desc { font-size: 12px; opacity: .8; margin-top: 1px; }
+.scenario-body { padding: 14px 18px; }
+.scenario-body ul { list-style: none; padding: 0; }
+.scenario-body li {
+  display: flex;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  color: #374151;
+  align-items: flex-start;
+}
+.scenario-body li:last-child { border-bottom: none; }
+.scenario-body li::before { content: '→'; color: var(--muted); font-weight: 700; flex-shrink: 0; }
+
+/* ── ORDERED STEPS ────────────────────────────────────────── */
+.steps { list-style: none; padding: 0; margin: 16px 0; counter-reset: step; }
+.steps li {
+  display: flex;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13.5px;
+  counter-increment: step;
+  align-items: flex-start;
+}
+.steps li:last-child { border-bottom: none; }
+.steps li::before {
+  content: counter(step);
+  min-width: 26px; height: 26px;
+  border-radius: 8px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── DECISION QUESTION ────────────────────────────────────── */
+.decision { margin: 12px 0 20px; }
+.d-q {
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px 8px 0 0;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex; align-items: center; gap: 10px;
+}
+.d-q-icon {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 900;
+  flex-shrink: 0;
+}
+.d-a {
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 10px 16px 10px 46px;
+  font-size: 13px;
+  color: #374151;
+  background: var(--white);
+  margin-bottom: 0;
+}
+
+/* ── COMPARE STRIP ────────────────────────────────────────── */
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin: 14px 0;
+}
+.compare-col {}
+.compare-head {
+  padding: 9px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  display: flex; align-items: center; gap: 8px;
+}
+.compare-body {
+  background: var(--code-bg);
+  padding: 14px 16px;
+  font-family: 'SF Mono','Fira Code',Consolas,monospace;
+  font-size: 12px;
+  color: #e2e8f0;
+  line-height: 1.7;
+  height: 100%;
+}
+
+/* ── PRINT ────────────────────────────────────────────────── */
+@media print {
+  .sidebar { display: none; }
+  .layout  { grid-template-columns: 1fr; }
+  .main    { max-width: 100%; }
+  .section { page-break-inside: avoid; padding: 32px 40px 28px; }
+  .hero    { padding: 40px; }
+  pre      { white-space: pre-wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ══════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="wordmark">A<span>ng</span>ular</div>
+    <div class="sub">Sprint 5 · Study Guide</div>
+  </div>
+  <nav>
+    <div class="nav-label">Start here</div>
+    <a class="nav-item" href="#s0"><span class="num" style="background:#0369a1">0</span> Project from Zero</a>
+    <div class="nav-label">Core concepts</div>
+    <a class="nav-item" href="#s1"><span class="num" style="background:var(--c1)">1</span> App Bootstrap</a>
+    <a class="nav-item" href="#s2"><span class="num" style="background:var(--c2)">2</span> Components</a>
+    <a class="nav-item" href="#s3"><span class="num" style="background:var(--c3)">3</span> Data Binding</a>
+    <a class="nav-item" href="#s4"><span class="num" style="background:var(--c4)">4</span> Routing</a>
+    <a class="nav-item" href="#s5"><span class="num" style="background:var(--c5)">5</span> Dependency Injection</a>
+    <a class="nav-item" href="#s6"><span class="num" style="background:var(--c6)">6</span> Signals</a>
+    <a class="nav-item" href="#s7"><span class="num" style="background:var(--c7)">7</span> Lifecycle Hooks</a>
+    <a class="nav-item" href="#s8"><span class="num" style="background:var(--c8)">8</span> Input &amp; Output</a>
+    <a class="nav-item" href="#s9"><span class="num" style="background:var(--c9)">9</span> Directives</a>
+    <a class="nav-item" href="#s10"><span class="num" style="background:var(--c10)">10</span> Pipes</a>
+    <a class="nav-item" href="#s11"><span class="num" style="background:var(--c11)">11</span> HTTP &amp; Observables</a>
+    <a class="nav-item" href="#s12"><span class="num" style="background:var(--c12)">12</span> Reactive Forms</a>
+    <a class="nav-item" href="#s13"><span class="num" style="background:var(--c13)">13</span> Route Guards</a>
+    <a class="nav-item" href="#s14"><span class="num" style="background:var(--c14)">14</span> Testing</a>
+    <div class="nav-label" style="margin-top:8px">Reference</div>
+    <a class="nav-item star" href="#qr"><span class="num">★</span> Quick Reference</a>
+  </nav>
+</aside>
+
+<!-- ══════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════ -->
+<main class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Angular · Sprint 5 Advanced</div>
+  <h1>The <em>Complete</em><br>Study Guide</h1>
+  <p>From spinning up a new project to routing, signals, HTTP, forms and testing — with real examples from the BookApp project.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">Angular v17+</span>
+    <span class="hero-tag">Standalone Components</span>
+    <span class="hero-tag">Signals</span>
+    <span class="hero-tag">signal inputs/outputs</span>
+    <span class="hero-tag">RxJS</span>
+    <span class="hero-tag">Reactive Forms</span>
+    <span class="hero-tag">Vitest</span>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────
+     00  PROJECT FROM ZERO
+──────────────────────────────────────────── -->
+<section class="section" id="s0">
+  <div class="section-header">
+    <div class="section-num" style="background:#0369a1">0</div>
+    <div class="section-meta">
+      <div class="section-title">Starting a Project from Zero</div>
+      <div class="section-sub">CLI · folder structure · mental model · 4 scenario types</div>
+    </div>
+  </div>
+
+  <!-- GENERATE -->
+  <h2>Step 1 — Generate the project</h2>
+  <p>Open your terminal in the folder where you want the project to live, then run:</p>
+  <pre><code><span class="cm"># ng new &lt;project-name&gt; creates everything you need</span>
+<span class="cm"># --routing  → generates app.routes.ts automatically</span>
+<span class="cm"># --style=css → use plain CSS (or scss, sass, less)</span>
+ng new book-app --routing --style=css
+
+<span class="cm"># Enter the folder and start the dev server</span>
+cd book-app
+ng serve</code></pre>
+
+  <!-- FOLDER STRUCTURE -->
+  <h2>Step 2 — Understand what was generated</h2>
+  <p>The CLI creates a complete project. Here is the part you will actually touch:</p>
+  <div class="file-tree">
+    <span class="dir">src/</span><br>
+    &nbsp;&nbsp;<span class="dir">app/</span><span class="ann">← everything Angular lives here</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">app.ts</span><span class="ann">← Root component — the shell that wraps every page</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">app.html</span><span class="ann">← Root template — contains &lt;nav&gt; and &lt;router-outlet /&gt;</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">app.config.ts</span><span class="ann">← Providers: router, HTTP client, etc.</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="imp">app.routes.ts</span><span class="ann">← All URL → component mappings</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">components/</span><span class="ann">← one sub-folder per feature/page (you create these)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">home/</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;home.ts &nbsp; home.html &nbsp; home.css<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">services/</span><span class="ann">← business logic &amp; data fetching (you create these)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">models/</span><span class="ann">← TypeScript interfaces describing your data shapes</span><br>
+    &nbsp;&nbsp;<span class="imp">main.ts</span><span class="ann">← Entry point — boots the app (rarely touched)</span><br>
+    &nbsp;&nbsp;<span class="imp">index.html</span><span class="ann">← The single HTML page the browser loads (rarely touched)</span><br>
+    &nbsp;&nbsp;styles.css<span class="ann">← Global styles (navbar, body, resets)</span><br>
+    <span class="dir">angular.json</span><span class="ann">← CLI config (build settings, assets)</span>
+  </div>
+
+  <!-- MENTAL MODEL -->
+  <h2>Step 3 — Ask yourself 5 questions before writing any code</h2>
+  <p>These questions map directly to the Angular building blocks you will need:</p>
+
+  <div class="decision">
+    <div class="d-q"><div class="d-q-icon">1</div> What pages / URLs does my app have?</div>
+    <div class="d-a">Create <strong>one component per page</strong>. Register each one in <code>app.routes.ts</code>. The component file goes in <code>src/app/components/</code>.</div>
+  </div>
+  <div class="decision">
+    <div class="d-q"><div class="d-q-icon">2</div> Does any page display data from somewhere (API, local list)?</div>
+    <div class="d-a">Define the <strong>data shape</strong> as a TypeScript interface (<code>models/book.ts</code>). Create a <strong>service</strong> to fetch/manage it (<code>services/book.service.ts</code>). If the data comes from an HTTP API, add <code>provideHttpClient()</code> to <code>app.config.ts</code>.</div>
+  </div>
+  <div class="decision">
+    <div class="d-q"><div class="d-q-icon">3</div> Does any page have a form where the user types something?</div>
+    <div class="d-a">Add <code>ReactiveFormsModule</code> to that component's <code>imports</code>. Use <code>FormBuilder</code> to define fields and validation rules.</div>
+  </div>
+  <div class="decision">
+    <div class="d-q"><div class="d-q-icon">4</div> Are any routes private (login required)?</div>
+    <div class="d-a">Create an <strong>auth service</strong> that tracks login state. Create a <strong>guard function</strong> (<code>auth.guard.ts</code>) and add <code>canActivate: [authGuard]</code> to the protected routes.</div>
+  </div>
+  <div class="decision">
+    <div class="d-q"><div class="d-q-icon">5</div> Do multiple unrelated components need to share the same data?</div>
+    <div class="d-a">Put that shared state inside a <strong>service</strong> (with a signal or observable). Inject the service in both components — they will automatically stay in sync.</div>
+  </div>
+
+  <!-- SCENARIOS -->
+  <h2>Step 4 — Match your project to a scenario type</h2>
+  <div class="grid-2">
+
+    <div class="scenario">
+      <div class="scenario-head" style="background:#2563eb">
+        <div class="scenario-letter">A</div>
+        <div>
+          <div class="scenario-name">Static / Presentational App</div>
+          <div class="scenario-desc">Pages that just show fixed content. No API, no forms.</div>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <ul>
+          <li>Components (one per page)</li>
+          <li>Routing in <code>app.routes.ts</code></li>
+          <li><code>&lt;nav&gt;</code> with <code>routerLink</code> in root template</li>
+          <li><code>&lt;router-outlet /&gt;</code> in root template</li>
+          <li><strong>That's it.</strong> No service, no HTTP.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-head" style="background:#0d9373">
+        <div class="scenario-letter">B</div>
+        <div>
+          <div class="scenario-name">Data-Driven App</div>
+          <div class="scenario-desc">Pages that fetch and display data from an API or service.</div>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <ul>
+          <li>Everything from Scenario A</li>
+          <li>TypeScript interface — the data shape (<code>models/book.ts</code>)</li>
+          <li>Service with <code>HttpClient</code> or local data</li>
+          <li><code>provideHttpClient()</code> in <code>app.config.ts</code></li>
+          <li>Component fetches via service in <code>ngOnInit()</code></li>
+          <li>Template displays with <code>@for</code>, <code>@if</code>, <code>async</code> pipe</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-head" style="background:#be185d">
+        <div class="scenario-letter">C</div>
+        <div>
+          <div class="scenario-name">App with User Input</div>
+          <div class="scenario-desc">Scenario B + forms where the user creates or edits data.</div>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <ul>
+          <li>Everything from Scenario B</li>
+          <li><code>ReactiveFormsModule</code> imported in the form component</li>
+          <li><code>FormBuilder</code> to define fields and validators</li>
+          <li><code>[formGroup]</code> and <code>formControlName</code> in the template</li>
+          <li>Service method to <code>POST</code> or <code>PUT</code> the data</li>
+          <li>Error messages shown conditionally with <code>@if</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-head" style="background:#4338ca">
+        <div class="scenario-letter">D</div>
+        <div>
+          <div class="scenario-name">Authenticated App</div>
+          <div class="scenario-desc">Scenario C + protected routes that require login.</div>
+        </div>
+      </div>
+      <div class="scenario-body">
+        <ul>
+          <li>Everything from Scenario C</li>
+          <li><code>AuthService</code> tracks <code>isLoggedIn</code> state</li>
+          <li>Login component with a form</li>
+          <li><code>authGuard</code> function redirects if not logged in</li>
+          <li><code>canActivate: [authGuard]</code> on protected routes</li>
+          <li>HTTP interceptor adds auth token to requests (advanced)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WORKFLOW -->
+  <h2>Step 5 — Typical build order</h2>
+  <p>Follow this order to avoid "I don't know where to start" paralysis:</p>
+  <ol class="steps">
+    <li><strong>Plan routes first.</strong> List every URL and which component shows there. Write them in <code>app.routes.ts</code> even before the components exist.</li>
+    <li><strong>Generate components.</strong> <code>ng g c components/home</code> — one per route. Add them to the routes file.</li>
+    <li><strong>Build the navigation.</strong> Add <code>routerLink</code> links in <code>app.html</code> and verify routing works with placeholder content.</li>
+    <li><strong>Define your data model.</strong> Write the TypeScript interface first — it forces you to think about data shape before writing any logic.</li>
+    <li><strong>Create the service.</strong> <code>ng g s services/book</code> — start with hardcoded data, then swap in <code>HttpClient</code>.</li>
+    <li><strong>Wire components to the service.</strong> Inject the service, fetch data in <code>ngOnInit()</code>, display it in the template.</li>
+    <li><strong>Add forms.</strong> Only after display is working — add create/edit forms with validation.</li>
+    <li><strong>Add guards last.</strong> Protect routes once the app is functional.</li>
+  </ol>
+
+  <!-- FILE NAMING -->
+  <h2>Angular file naming conventions</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>What it is</th><th>File name convention</th><th>Class name convention</th></tr></thead>
+    <tbody>
+      <tr><td>Component</td><td><code>book-list.ts</code></td><td><code>BookList</code></td></tr>
+      <tr><td>Service</td><td><code>book.service.ts</code></td><td><code>BookService</code></td></tr>
+      <tr><td>Guard</td><td><code>auth.guard.ts</code></td><td><code>authGuard</code> (function)</td></tr>
+      <tr><td>Interface / Model</td><td><code>book.model.ts</code></td><td><code>Book</code></td></tr>
+      <tr><td>Pipe</td><td><code>truncate.pipe.ts</code></td><td><code>TruncatePipe</code></td></tr>
+      <tr><td>Interceptor</td><td><code>auth.interceptor.ts</code></td><td><code>authInterceptor</code> (function)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     01 BOOTSTRAP
+──────────────────────────────────────────── -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c1)">01</div>
+    <div class="section-meta">
+      <div class="section-title">How an Angular App Starts</div>
+      <div class="section-sub">main.ts → app.config.ts → root component</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>src/main.ts <span class="badge project">This project</span></h3>
+      <pre><code><span class="cm">// This is the single entry point — the browser loads this first.</span>
+<span class="cm">// Its only job is to boot the Angular app.</span>
+<span class="kw">import</span> { bootstrapApplication } <span class="kw">from</span> <span class="str">'@angular/platform-browser'</span>;
+<span class="kw">import</span> { appConfig } <span class="kw">from</span> <span class="str">'./app/app.config'</span>;
+<span class="kw">import</span> { App } <span class="kw">from</span> <span class="str">'./app/app'</span>;
+
+<span class="cm">// bootstrapApplication takes:</span>
+<span class="cm">//   1. The root component (App) — the top-level shell</span>
+<span class="cm">//   2. appConfig — where providers (router, http, etc.) are registered</span>
+bootstrapApplication(App, appConfig)
+  .catch(err =&gt; console.error(err));</code></pre>
+      <div class="callout tip">
+        <strong>Modern Angular (v14+) — no AppModule</strong>
+        Older tutorials use <code>NgModule</code> + <code>platformBrowserDynamic().bootstrapModule(AppModule)</code>. Modern Angular replaces all of that with this single <code>bootstrapApplication()</code> call.
+      </div>
+    </div>
+    <div>
+      <h3>src/app/app.config.ts <span class="badge project">This project</span></h3>
+      <pre><code><span class="cm">// This is the "registry" for app-wide services.</span>
+<span class="cm">// Every provider listed here is available everywhere in the app.</span>
+<span class="kw">import</span> { ApplicationConfig,
+  provideBrowserGlobalErrorListeners }
+  <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { provideRouter } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="kw">export const</span> <span class="vr">appConfig</span>: ApplicationConfig = {
+  providers: [
+    <span class="cm">// Enables global error catching in the browser</span>
+    provideBrowserGlobalErrorListeners(),
+    <span class="cm">// Registers the router with our route definitions</span>
+    provideRouter(routes),
+    <span class="cm">// provideHttpClient()  ← uncomment when you need HTTP</span>
+  ]
+};</code></pre>
+    </div>
+  </div>
+
+  <h3>Common providers — add them here when you need them</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Provider</th><th>Import from</th><th>What it gives you</th></tr></thead>
+    <tbody>
+      <tr><td><code>provideRouter(routes)</code></td><td>@angular/router</td><td>Client-side routing between components</td></tr>
+      <tr><td><code>provideHttpClient()</code></td><td>@angular/common/http</td><td>The <code>HttpClient</code> service for API calls</td></tr>
+      <tr><td><code>provideAnimations()</code></td><td>@angular/platform-browser/animations</td><td>Angular animation engine</td></tr>
+      <tr><td><code>provideBrowserGlobalErrorListeners()</code></td><td>@angular/core</td><td>Catches unhandled errors globally</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     02 COMPONENTS
+──────────────────────────────────────────── -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c2)">02</div>
+    <div class="section-meta">
+      <div class="section-title">Components — The Building Block</div>
+      <div class="section-sub">@Component · selector · imports · template · styles</div>
+    </div>
+  </div>
+
+  <h3>Anatomy of a standalone component <span class="badge project">This project</span></h3>
+  <pre><code><span class="cm">// Every component is a TypeScript class decorated with @Component.</span>
+<span class="cm">// The decorator tells Angular: "this class is a UI component".</span>
+<span class="kw">import</span> { Component, signal } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { RouterOutlet, RouterLinkWithHref, RouterLinkActive }
+  <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="dc">@Component</span>({
+  <span class="cm">// The CSS selector used to place this component in an HTML file.</span>
+  <span class="cm">// e.g. &lt;app-root /&gt; in index.html</span>
+  selector: <span class="str">'app-root'</span>,
+
+  <span class="cm">// IMPORTANT: In standalone components, you declare HERE what</span>
+  <span class="cm">// other components, directives, and pipes this template uses.</span>
+  <span class="cm">// No shared NgModule needed — each component is self-contained.</span>
+  imports: [RouterOutlet, RouterLinkWithHref, RouterLinkActive],
+
+  <span class="cm">// The HTML template for this component's view</span>
+  templateUrl: <span class="str">'./app.html'</span>,
+
+  <span class="cm">// CSS that is scoped ONLY to this component — won't leak out</span>
+  styleUrl: <span class="str">'./app.css'</span>
+})
+<span class="kw">export class</span> <span class="ty">App</span> {
+  <span class="cm">// A signal holding the app title.</span>
+  <span class="cm">// 'protected' means only this class and its template can read it.</span>
+  <span class="cm">// 'readonly' means it can't be reassigned (only signal.set() can change the value).</span>
+  <span class="kw">protected readonly</span> <span class="vr">title</span> = signal(<span class="str">'book-app'</span>);
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>@Component decorator fields</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>selector</code></td><td>CSS selector to place this component in HTML</td></tr>
+          <tr><td><code>imports</code></td><td>Dependencies this component's template uses</td></tr>
+          <tr><td><code>templateUrl</code></td><td>External HTML file path</td></tr>
+          <tr><td><code>template</code></td><td>Inline HTML string (alternative)</td></tr>
+          <tr><td><code>styleUrl</code></td><td>Scoped CSS file path</td></tr>
+          <tr><td><code>changeDetection</code></td><td><code>ChangeDetectionStrategy.OnPush</code> for performance</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3>Components in this project</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Component</th><th>Route</th></tr></thead>
+        <tbody>
+          <tr><td><code>App</code></td><td>Root shell — always visible (nav + outlet)</td></tr>
+          <tr><td><code>Home</code></td><td><code>/</code></td></tr>
+          <tr><td><code>BookList</code></td><td><code>/books</code></td></tr>
+          <tr><td><code>BookDetails</code></td><td><code>/books/:bookId</code></td></tr>
+          <tr><td><code>NotFound</code></td><td><code>**</code> — 404 catch-all</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     03 DATA BINDING
+──────────────────────────────────────────── -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c3)">03</div>
+    <div class="section-meta">
+      <div class="section-title">Templates &amp; Data Binding</div>
+      <div class="section-sub">The 4 ways component class and HTML talk to each other</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="binding-card">
+      <div class="binding-header" style="background:#7c3aed">&#123;&#123; &#125;&#125; — Interpolation &nbsp;·&nbsp; class → DOM (text only)</div>
+      <div class="binding-body"><span class="cm">// component class</span>
+name = <span class="str">'Angular'</span>;
+title = signal(<span class="str">'book-app'</span>);
+
+<span class="cm">// template (HTML)</span>
+<span class="cm">// Angular replaces {{ }} with the property's string value</span>
+&lt;h1&gt;Hello, {{ name }}&lt;/h1&gt;
+
+<span class="cm">// Signals must be called like a function: title()</span>
+&lt;p&gt;App: {{ title() }}&lt;/p&gt;</div>
+    </div>
+    <div class="binding-card">
+      <div class="binding-header" style="background:#2563eb">[ ] — Property Binding &nbsp;·&nbsp; class → DOM</div>
+      <div class="binding-body"><span class="cm">// component class</span>
+isDisabled = <span class="kw">true</span>;
+imgUrl = <span class="str">'logo.png'</span>;
+
+<span class="cm">// template — sets a DOM property from class data</span>
+<span class="cm">// The value inside "" is a TypeScript expression, not a string</span>
+&lt;button [disabled]=<span class="str">"isDisabled"</span>&gt;OK&lt;/button&gt;
+&lt;img [src]=<span class="str">"imgUrl"</span> /&gt;</div>
+    </div>
+    <div class="binding-card">
+      <div class="binding-header" style="background:#0d9373">( ) — Event Binding &nbsp;·&nbsp; DOM → class</div>
+      <div class="binding-body"><span class="cm">// component class</span>
+onSave() { <span class="cm">/* called when button is clicked */</span> }
+onType(e: Event) { <span class="cm">/* called on every keystroke */</span> }
+
+<span class="cm">// template — calls a class method when the event fires</span>
+<span class="cm">// $event is the native DOM event object</span>
+&lt;button (click)=<span class="str">"onSave()"</span>&gt;Save&lt;/button&gt;
+&lt;input (input)=<span class="str">"onType($event)"</span> /&gt;</div>
+    </div>
+    <div class="binding-card">
+      <div class="binding-header" style="background:#dd0031">[(  )] — Two-Way &nbsp;·&nbsp; class ↔ DOM</div>
+      <div class="binding-body"><span class="cm">// component class</span>
+<span class="cm">// needs FormsModule in @Component imports</span>
+searchTerm = <span class="str">''</span>;
+
+<span class="cm">// template — typing in the input updates searchTerm,</span>
+<span class="cm">// and changing searchTerm in code updates the input</span>
+&lt;input [(ngModel)]=<span class="str">"searchTerm"</span> /&gt;
+&lt;p&gt;You typed: {{ searchTerm }}&lt;/p&gt;</div>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <strong>From this project — app.html</strong>
+    <code>[routerLinkActiveOptions]="&#123; exact: true &#125;"</code> is property binding: the value <code>&#123; exact: true &#125;</code> is a JavaScript object passed to the <code>routerLinkActive</code> directive. Square brackets always mean "evaluate the right side as TypeScript, not as a plain string."
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     04 ROUTING
+──────────────────────────────────────────── -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c4)">04</div>
+    <div class="section-meta">
+      <div class="section-title">Routing</div>
+      <div class="section-sub">Routes · RouterOutlet · routerLink · params · navigate</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>app.routes.ts <span class="badge project">This project</span></h3>
+      <pre><code><span class="cm">// Routes is an array of objects.</span>
+<span class="cm">// Each object maps a URL path → a component to show.</span>
+<span class="kw">export const</span> <span class="vr">routes</span>: Routes = [
+
+  <span class="cm">// Empty path '' = the homepage (URL is just '/')</span>
+  { path: <span class="str">''</span>, component: Home },
+
+  <span class="cm">// Static path — shows BookList at /books</span>
+  { path: <span class="str">'books'</span>, component: BookList },
+
+  <span class="cm">// Dynamic segment: :bookId is a parameter.</span>
+  <span class="cm">// /books/42 → BookDetails gets bookId = '42'</span>
+  { path: <span class="str">'books/:bookId'</span>, component: BookDetails },
+
+  <span class="cm">// Redirect: old path → new path</span>
+  <span class="cm">// pathMatch:'full' means only redirect exact empty string, not sub-paths</span>
+  { path: <span class="str">''</span>, redirectTo: <span class="str">'home'</span>, pathMatch: <span class="str">'full'</span> },
+
+  <span class="cm">// Wildcard ** catches everything that didn't match above.</span>
+  <span class="cm">// MUST be last — Angular checks routes in order, top to bottom.</span>
+  { path: <span class="str">'**'</span>, component: NotFound }
+];</code></pre>
+    </div>
+    <div>
+      <h3>app.html <span class="badge project">This project</span></h3>
+      <pre><code><span class="cm">&lt;!-- routerLink is like href but for Angular routing.</span>
+<span class="cm">     It navigates without reloading the whole page. --&gt;</span>
+&lt;nav&gt;
+  &lt;a
+    routerLink=<span class="str">"/"</span>
+    routerLinkActive=<span class="str">"active-link"</span>
+    [routerLinkActiveOptions]=<span class="str">"&#123; exact: true &#125;"</span>
+  &gt;
+    Inici
+  &lt;/a&gt;
+  &lt;a
+    routerLink=<span class="str">"books"</span>
+    routerLinkActive=<span class="str">"active-link"</span>
+  &gt;
+    Llibres
+  &lt;/a&gt;
+&lt;/nav&gt;
+
+<span class="cm">&lt;!-- router-outlet is the "slot" where the matched</span>
+<span class="cm">     component gets rendered. Think of it as a placeholder. --&gt;</span>
+&lt;router-outlet /&gt;</code></pre>
+    </div>
+  </div>
+
+  <h3>Reading route parameters — when a URL has <code>:id</code></h3>
+  <pre><code><span class="cm">// When the route is: { path: 'books/:bookId', component: BookDetails }</span>
+<span class="cm">// and the URL is /books/42, we need to extract that '42' inside the component.</span>
+<span class="kw">import</span> { ActivatedRoute } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+<span class="kw">import</span> { inject } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="kw">export class</span> <span class="ty">BookDetails</span> <span class="kw">implements</span> <span class="ty">OnInit</span> {
+  <span class="cm">// ActivatedRoute gives us access to the current route's parameters</span>
+  <span class="kw">private</span> route = inject(ActivatedRoute);
+
+  ngOnInit() {
+    <span class="cm">// Option 1 — snapshot: reads the value once, right now.</span>
+    <span class="cm">// Use this when the parameter won't change while the component is open.</span>
+    <span class="kw">const</span> id = <span class="kw">this</span>.route.snapshot.paramMap.get(<span class="str">'bookId'</span>);
+
+    <span class="cm">// Option 2 — observable: updates reactively if the URL param changes.</span>
+    <span class="cm">// Use this when the user can navigate from /books/1 to /books/2</span>
+    <span class="cm">// without leaving the BookDetails component.</span>
+    <span class="kw">this</span>.route.paramMap.subscribe(params =&gt; {
+      <span class="kw">const</span> id = params.get(<span class="str">'bookId'</span>);
+    });
+  }
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>Programmatic navigation (from TypeScript)</h3>
+      <pre><code><span class="cm">// Sometimes you need to navigate after an action,</span>
+<span class="cm">// not from a click on an &lt;a&gt; tag.</span>
+<span class="kw">private</span> router = inject(Router);
+
+goToBook(id: <span class="ty">number</span>) {
+  <span class="cm">// Builds the URL /books/42</span>
+  <span class="kw">this</span>.router.navigate([<span class="str">'/books'</span>, id]);
+}
+
+goHome() {
+  <span class="cm">// Navigate to a full URL string</span>
+  <span class="kw">this</span>.router.navigateByUrl(<span class="str">'/'</span>);
+}</code></pre>
+    </div>
+    <div>
+      <h3>Routing directives at a glance</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Directive / class</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>routerLink</code></td><td>Navigate on click (replaces href)</td></tr>
+          <tr><td><code>routerLinkActive</code></td><td>Adds a CSS class when this route is active</td></tr>
+          <tr><td><code>[routerLinkActiveOptions]</code></td><td>Options — e.g. <code>&#123;exact:true&#125;</code> for home page</td></tr>
+          <tr><td><code>&lt;router-outlet&gt;</code></td><td>Slot where matched component renders</td></tr>
+          <tr><td><code>ActivatedRoute</code></td><td>Access current URL params, query string, data</td></tr>
+          <tr><td><code>Router</code></td><td>Navigate programmatically from TypeScript</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     05 DI
+──────────────────────────────────────────── -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c5)">05</div>
+    <div class="section-meta">
+      <div class="section-title">Dependency Injection &amp; Services</div>
+      <div class="section-sub">@Injectable · inject() · providedIn · singleton pattern</div>
+    </div>
+  </div>
+
+  <div class="callout key">
+    <strong>What is Dependency Injection?</strong>
+    Instead of a component creating its own service with <code>new BookService()</code>, Angular creates the service once and <em>gives it</em> to any component that asks for it. This means all components share the same instance — so state is automatically shared.
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>Creating a service</h3>
+      <pre><code><span class="cm">// A service is a plain class with @Injectable.</span>
+<span class="cm">// It holds logic and state that multiple components can share.</span>
+<span class="kw">import</span> { Injectable } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="cm">// providedIn: 'root' means Angular creates ONE instance</span>
+<span class="cm">// for the whole app (singleton). Available everywhere.</span>
+<span class="dc">@Injectable</span>({ providedIn: <span class="str">'root'</span> })
+<span class="kw">export class</span> <span class="ty">BookService</span> {
+
+  <span class="kw">private</span> books: Book[] = [
+    { id: 1, title: <span class="str">'Clean Code'</span> }
+  ];
+
+  getBooks() {
+    <span class="kw">return this</span>.books;
+  }
+}</code></pre>
+    </div>
+    <div>
+      <h3>Injecting — two styles</h3>
+      <pre><code><span class="cm">// ── Modern style (Angular 14+) — recommended ──────</span>
+<span class="cm">// inject() can be used directly in field declarations</span>
+<span class="kw">export class</span> <span class="ty">BookList</span> {
+  <span class="kw">private</span> svc = inject(BookService);
+  books = <span class="kw">this</span>.svc.getBooks();
+}
+
+<span class="cm">// ── Classic style — constructor injection ─────────</span>
+<span class="cm">// Angular sees the type annotation and injects it</span>
+<span class="kw">export class</span> <span class="ty">BookList</span> {
+  <span class="kw">constructor</span>(<span class="kw">private</span> svc: BookService) {}
+
+  ngOnInit() {
+    <span class="kw">this</span>.books = <span class="kw">this</span>.svc.getBooks();
+  }
+}</code></pre>
+      <div class="callout tip">
+        <strong>Prefer inject() in modern Angular</strong>
+        It works in field initialisers, is easier to test, and keeps the constructor clean.
+      </div>
+    </div>
+  </div>
+
+  <h3>Providing at different levels</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Level</th><th>How</th><th>Scope — how many instances?</th></tr></thead>
+    <tbody>
+      <tr><td>Root (app-wide)</td><td><code>@Injectable({ providedIn: 'root' })</code></td><td>One singleton for the entire app</td></tr>
+      <tr><td>Component level</td><td><code>@Component({ providers: [MyService] })</code></td><td>New instance per component tree</td></tr>
+      <tr><td>App config</td><td>Add to <code>appConfig.providers</code></td><td>Same as root</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     06 SIGNALS
+──────────────────────────────────────────── -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c6)">06</div>
+    <div class="section-meta">
+      <div class="section-title">Signals — Modern Reactive State</div>
+      <div class="section-sub">signal() · computed() · effect() — Angular 17+</div>
+    </div>
+  </div>
+
+  <div class="callout key">
+    <strong>What is a Signal?</strong>
+    A signal is a box that holds a value. Angular watches that box. When the value changes, Angular automatically re-renders any template or <code>computed()</code> that reads it. No manual subscriptions, no <code>detectChanges()</code>.
+  </div>
+
+  <h3>Already in this project — app.ts <span class="badge project">This project</span></h3>
+  <pre><code><span class="cm">// signal('book-app') creates a signal holding the string 'book-app'</span>
+<span class="kw">protected readonly</span> title = signal(<span class="str">'book-app'</span>);
+
+<span class="cm">// In the template, read a signal by CALLING it like a function:</span>
+<span class="cm">// {{ title() }}  — note the parentheses!</span></code></pre>
+
+  <h3>Full signals API with examples</h3>
+  <pre><code><span class="kw">import</span> { signal, computed, effect } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="kw">export class</span> <span class="ty">CounterComponent</span> {
+
+  <span class="cm">// signal(initialValue) — writable signal</span>
+  <span class="cm">// Reading: this.count()    Writing: this.count.set(5)</span>
+  count = signal(0);
+
+  <span class="cm">// computed() — a derived value that recalculates automatically</span>
+  <span class="cm">// when any signal it reads changes. Read-only — no .set()</span>
+  doubled = computed(() =&gt; <span class="kw">this</span>.count() * 2);
+
+  <span class="kw">constructor</span>() {
+    <span class="cm">// effect() runs a side effect whenever a read signal changes.</span>
+    <span class="cm">// Angular automatically tracks which signals are read inside.</span>
+    effect(() =&gt; {
+      console.log(<span class="str">'count changed to:'</span>, <span class="kw">this</span>.count());
+    });
+  }
+
+  increment() {
+    <span class="cm">// update() receives the previous value and returns the new one</span>
+    <span class="kw">this</span>.count.update(prev =&gt; prev + 1);
+  }
+
+  reset() {
+    <span class="cm">// set() replaces the value directly</span>
+    <span class="kw">this</span>.count.set(0);
+  }
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>Signal methods</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>signal(val)</code></td><td>Create a writable signal</td></tr>
+          <tr><td><code>sig()</code></td><td>Read the current value</td></tr>
+          <tr><td><code>sig.set(val)</code></td><td>Replace value directly</td></tr>
+          <tr><td><code>sig.update(fn)</code></td><td>Update based on previous value</td></tr>
+          <tr><td><code>computed(fn)</code></td><td>Read-only derived signal</td></tr>
+          <tr><td><code>effect(fn)</code></td><td>Side effect on signal change</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="callout warn">
+        <strong>Signals vs Observables</strong>
+        <strong>Signals</strong> are synchronous, always have a value, no subscribe needed. Perfect for component state and simple reactive data.<br><br>
+        <strong>Observables</strong> are async streams — many values over time. Use them for HTTP calls, real-time data, and complex async flows.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     07 LIFECYCLE
+──────────────────────────────────────────── -->
+<section class="section" id="s7">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c7)">07</div>
+    <div class="section-meta">
+      <div class="section-title">Lifecycle Hooks</div>
+      <div class="section-sub">Angular calls these methods automatically at specific moments</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="lifecycle">
+        <div class="lc-item grey">
+          <div class="lc-name">constructor()</div>
+          <div class="lc-desc">Class is created. <code>@Input</code> values not set yet. No DOM.</div>
+          <div class="lc-use">→ Inject services here only. No logic.</div>
+        </div>
+        <div class="lc-item blue">
+          <div class="lc-name">ngOnChanges(changes)</div>
+          <div class="lc-desc">Called every time an <code>@Input()</code> / <code>input()</code> value changes from the parent. Also fires once before <code>ngOnInit</code>.</div>
+          <div class="lc-use">→ React to parent data changes.</div>
+        </div>
+        <div class="lc-item green">
+          <div class="lc-name">ngOnInit()</div>
+          <div class="lc-desc">Called once after the first <code>ngOnChanges</code>. Inputs are now available. The most commonly used hook.</div>
+          <div class="lc-use">→ Fetch data, subscribe to observables, initialise state.</div>
+        </div>
+        <div class="lc-item amber">
+          <div class="lc-name">ngAfterViewInit()</div>
+          <div class="lc-desc">Called after the component's HTML and all child components are rendered into the DOM.</div>
+          <div class="lc-use">→ Access <code>@ViewChild</code> elements, interact with the DOM directly.</div>
+        </div>
+        <div class="lc-item red">
+          <div class="lc-name">ngOnDestroy()</div>
+          <div class="lc-desc">Called just before Angular removes the component from the DOM.</div>
+          <div class="lc-use">→ Unsubscribe from observables, clear timers. Critical for preventing memory leaks.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>Typical pattern with HTTP fetch</h3>
+      <pre><code><span class="kw">import</span> { OnInit, OnDestroy }
+  <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="cm">// Declare which hooks you implement</span>
+<span class="kw">export class</span> <span class="ty">BookDetails</span>
+  <span class="kw">implements</span> <span class="ty">OnInit</span>, <span class="ty">OnDestroy</span> {
+
+  <span class="kw">private</span> svc = inject(BookService);
+  book: Book | <span class="kw">null</span> = <span class="kw">null</span>;
+
+  <span class="cm">// Store the subscription so we can cancel it</span>
+  <span class="kw">private</span> sub!: Subscription;
+
+  ngOnInit() {
+    <span class="cm">// Good place to fetch data because</span>
+    <span class="cm">// inputs (like route params) are already set</span>
+    <span class="kw">this</span>.sub = <span class="kw">this</span>.svc
+      .getBook(this.id)
+      .subscribe(book =&gt; {
+        <span class="kw">this</span>.book = book;
+      });
+  }
+
+  ngOnDestroy() {
+    <span class="cm">// Prevents memory leaks when the component</span>
+    <span class="cm">// is removed (e.g. user navigates away)</span>
+    <span class="kw">this</span>.sub.unsubscribe();
+  }
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     08 INPUT & OUTPUT  (new signal syntax)
+──────────────────────────────────────────── -->
+<section class="section" id="s8">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c8)">08</div>
+    <div class="section-meta">
+      <div class="section-title">Input &amp; Output — Component Communication</div>
+      <div class="section-sub">signal inputs · signal outputs · parent↔child data flow</div>
+    </div>
+  </div>
+
+  <div class="callout key">
+    <strong>The mental model</strong>
+    Data flows <strong>DOWN</strong> from parent to child via inputs (property binding <code>[prop]</code>). Events flow <strong>UP</strong> from child to parent via outputs (event binding <code>(event)</code>). Components don't reach into each other — they communicate through this contract only.
+  </div>
+
+  <!-- NEW SYNTAX -->
+  <h2>New syntax — Angular 17+ &nbsp;<span class="badge modern">Recommended</span></h2>
+  <p>Instead of decorators, inputs and outputs are now defined as <strong>signal functions</strong>. Inputs become read-only Signals — you read them with <code>()</code>, just like any other signal.</p>
+
+  <div class="compare">
+    <div class="compare-col">
+      <div class="compare-head" style="background:#9333ea">Child component — book-card.ts</div>
+      <div class="compare-body"><span class="cm">// Import input and output from '@angular/core'</span>
+<span class="cm">// NOT the old Input/Output decorators</span>
+<span class="kw">import</span> { Component, input, output }
+  <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dc">@Component</span>({ selector: <span class="str">'app-book-card'</span>, ... })
+<span class="kw">export class</span> <span class="ty">BookCard</span> {
+
+  <span class="cm">// input&lt;Type&gt;(default) — optional input</span>
+  <span class="cm">// Returns a Signal. Read inside class: this.title()</span>
+  <span class="cm">// Read in template: {{ title() }}</span>
+  title  = input&lt;<span class="ty">string</span>&gt;(<span class="str">''</span>);
+  author = input&lt;<span class="ty">string</span>&gt;(<span class="str">''</span>);
+
+  <span class="cm">// input.required&lt;Type&gt;() — parent MUST pass this.</span>
+  <span class="cm">// No default needed. Angular errors at compile time if missing.</span>
+  bookId = input.required&lt;<span class="ty">number</span>&gt;();
+
+  <span class="cm">// output&lt;Type&gt;() — replaces EventEmitter entirely</span>
+  <span class="cm">// Parent listens with: (selected)="handleIt($event)"</span>
+  selected = output&lt;<span class="ty">number</span>&gt;();
+
+  onSelect() {
+    <span class="cm">// bookId is a Signal — read it with bookId()</span>
+    <span class="kw">this</span>.selected.emit(<span class="kw">this</span>.bookId());
+  }
+}</div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-head" style="background:#1e3a5f">Child template — book-card.html</div>
+      <div class="compare-body"><span class="cm">&lt;!-- Inputs are Signals: call them with () --&gt;</span>
+&lt;div (click)=<span class="str">"onSelect()"</span>&gt;
+
+  <span class="cm">&lt;!-- title() reads the signal's current value --&gt;</span>
+  &lt;h3&gt;{{ title() }}&lt;/h3&gt;
+
+  &lt;p&gt;by {{ author() }}&lt;/p&gt;
+
+&lt;/div&gt;
+
+<br>
+<span class="cm">&lt;!-- ─────────────────────────────────────── --&gt;</span>
+<span class="cm">&lt;!-- Parent template — books.html --&gt;</span>
+<span class="cm">&lt;!-- Template syntax is IDENTICAL to the old way. --&gt;</span>
+<span class="cm">&lt;!-- Angular wires the signals under the hood. --&gt;</span>
+
+@for (book of books; track book.id) {
+  &lt;app-book-card
+    [title]=<span class="str">"book.title"</span>
+    [author]=<span class="str">"book.author"</span>
+    [bookId]=<span class="str">"book.id"</span>
+    (selected)=<span class="str">"handleSelected($event)"</span>
+  /&gt;
+}</div>
+    </div>
+  </div>
+
+  <!-- OLD SYNTAX COMPARISON -->
+  <h2>Old syntax — decorator-based &nbsp;<span class="badge classic">Still works, but verbose</span></h2>
+  <p>You will see this in older code and many tutorials. Know both.</p>
+
+  <pre><code><span class="cm">// Import the decorators — @Input and @Output</span>
+<span class="kw">import</span> { Component, Input, Output, EventEmitter }
+  <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="kw">export class</span> <span class="ty">BookCard</span> {
+
+  <span class="cm">// @Input() makes 'title' settable from the parent.</span>
+  <span class="cm">// It is a PLAIN TypeScript property — read as this.title (no parentheses)</span>
+  <span class="dc">@Input</span>() title:  <span class="ty">string</span> = <span class="str">''</span>;
+  <span class="dc">@Input</span>() author: <span class="ty">string</span> = <span class="str">''</span>;
+
+  <span class="cm">// required: true — Angular warns if the parent forgets to pass it.</span>
+  <span class="cm">// The ! tells TypeScript "I know this will be set before use".</span>
+  <span class="dc">@Input</span>({ required: <span class="kw">true</span> }) bookId!: <span class="ty">number</span>;
+
+  <span class="cm">// @Output() + new EventEmitter&lt;T&gt;() creates an event the parent can catch.</span>
+  <span class="cm">// T is the type of the value emitted — here a number.</span>
+  <span class="dc">@Output</span>() selected = <span class="kw">new</span> EventEmitter&lt;<span class="ty">number</span>&gt;();
+
+  onSelect() {
+    <span class="cm">// bookId is a plain property — read directly, no ()</span>
+    <span class="kw">this</span>.selected.emit(<span class="kw">this</span>.bookId);
+  }
+}</code></pre>
+
+  <h3>Old vs New — side-by-side comparison</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>Old (@Input / @Output)</th><th>New (input() / output())</th></tr></thead>
+    <tbody>
+      <tr><td>Optional input</td><td><code>@Input() title: string = ''</code></td><td><code>title = input&lt;string&gt;('')</code></td></tr>
+      <tr><td>Required input</td><td><code>@Input({ required: true }) bookId!: number</code></td><td><code>bookId = input.required&lt;number&gt;()</code></td></tr>
+      <tr><td>Read in class</td><td><code>this.title</code> (plain property)</td><td><code>this.title()</code> (it's a Signal)</td></tr>
+      <tr><td>Read in template</td><td><code>{{ title }}</code></td><td><code>{{ title() }}</code></td></tr>
+      <tr><td>Output</td><td><code>@Output() e = new EventEmitter&lt;T&gt;()</code></td><td><code>e = output&lt;T&gt;()</code></td></tr>
+      <tr><td>Emit event</td><td><code>this.e.emit(value)</code></td><td><code>this.e.emit(value)</code> (same!)</td></tr>
+      <tr><td>Parent template</td><td><code>[title]="x" (selected)="fn($event)"</code></td><td><code>[title]="x" (selected)="fn($event)"</code> (identical!)</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout info">
+    <strong>The parent template never changes</strong>
+    Whether you use the old or new syntax inside the child, the parent always uses the same <code>[prop]="value"</code> and <code>(event)="handler($event)"</code> syntax. Angular handles the wiring.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     09 DIRECTIVES
+──────────────────────────────────────────── -->
+<section class="section" id="s9">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c9)">09</div>
+    <div class="section-meta">
+      <div class="section-title">Built-in Directives</div>
+      <div class="section-sub">@if · @for · @switch · *ngIf · *ngFor · ngClass · ngStyle</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>New control flow <span class="badge new">Angular 17+</span></h3>
+      <pre><code><span class="cm">&lt;!-- @if — conditionally show/hide content --&gt;</span>
+<span class="cm">&lt;!-- The condition is any TypeScript expression --&gt;</span>
+@if (books.length &gt; 0) {
+  &lt;p&gt;Found {{ books.length }} books&lt;/p&gt;
+} @else {
+  &lt;p&gt;No books found.&lt;/p&gt;
+}
+
+<span class="cm">&lt;!-- @for — loop over an array --&gt;</span>
+<span class="cm">&lt;!-- track tells Angular which field identifies each item --&gt;</span>
+<span class="cm">&lt;!-- Without track, Angular re-renders the whole list on any change --&gt;</span>
+@for (book of books; track book.id) {
+  &lt;app-book-card [title]=<span class="str">"book.title"</span> /&gt;
+} @empty {
+  <span class="cm">&lt;!-- shown when the array is empty --&gt;</span>
+  &lt;p&gt;The list is empty.&lt;/p&gt;
+}
+
+<span class="cm">&lt;!-- @switch — like a JS switch statement in the template --&gt;</span>
+@switch (status) {
+  @case (<span class="str">'loading'</span>) { &lt;p&gt;Loading...&lt;/p&gt; }
+  @case (<span class="str">'error'</span>)   { &lt;p&gt;Something went wrong.&lt;/p&gt; }
+  @default            { &lt;p&gt;Ready.&lt;/p&gt; }
+}</code></pre>
+    </div>
+    <div>
+      <h3>Classic directives <span class="badge classic">Still valid</span></h3>
+      <pre><code><span class="cm">&lt;!-- *ngIf — show element only when condition is true --&gt;</span>
+&lt;div *ngIf=<span class="str">"isLoggedIn"</span>&gt;Welcome!&lt;/div&gt;
+
+<span class="cm">&lt;!-- *ngIf with else template --&gt;</span>
+&lt;div *ngIf=<span class="str">"isLoggedIn; else noAccess"</span>&gt;
+  Welcome!
+&lt;/div&gt;
+&lt;ng-template #noAccess&gt;
+  Please log in.
+&lt;/ng-template&gt;
+
+<span class="cm">&lt;!-- *ngFor — loop — trackBy is the performance key --&gt;</span>
+&lt;li *ngFor=<span class="str">"let book of books;
+  trackBy: trackById"</span>&gt;
+  {{ book.title }}
+&lt;/li&gt;
+
+<span class="cm">&lt;!-- [ngClass] — add/remove CSS classes conditionally --&gt;</span>
+&lt;p [ngClass]=<span class="str">"&#123;
+  'active': isActive,
+  'has-error': hasError
+&#125;"</span>&gt;&lt;/p&gt;
+
+<span class="cm">&lt;!-- [ngStyle] — apply inline styles dynamically --&gt;</span>
+&lt;div [ngStyle]=<span class="str">"&#123; color: textColor &#125;"</span>&gt;&lt;/div&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <strong>Always use track in @for</strong>
+    <code>track book.id</code> tells Angular which property uniquely identifies each item. Without it, when the array changes Angular destroys and recreates every DOM element — even if only one item changed. Always track.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     10 PIPES
+──────────────────────────────────────────── -->
+<section class="section" id="s10">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c10)">10</div>
+    <div class="section-meta">
+      <div class="section-title">Pipes — Transform Display Values</div>
+      <div class="section-sub">Format data in templates without changing the original value</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>Built-in pipes</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Pipe</th><th>Example</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td><code>uppercase</code></td><td><code>&#123;&#123; 'hi' | uppercase &#125;&#125;</code></td><td>HI</td></tr>
+          <tr><td><code>lowercase</code></td><td><code>&#123;&#123; 'HI' | lowercase &#125;&#125;</code></td><td>hi</td></tr>
+          <tr><td><code>date</code></td><td><code>&#123;&#123; d | date:'dd/MM/yyyy' &#125;&#125;</code></td><td>12/04/2026</td></tr>
+          <tr><td><code>currency</code></td><td><code>&#123;&#123; 9.99 | currency:'EUR' &#125;&#125;</code></td><td>€9.99</td></tr>
+          <tr><td><code>number</code></td><td><code>&#123;&#123; 3.14 | number:'1.2-2' &#125;&#125;</code></td><td>3.14</td></tr>
+          <tr><td><code>slice</code></td><td><code>&#123;&#123; arr | slice:0:3 &#125;&#125;</code></td><td>First 3 items</td></tr>
+          <tr><td><code>json</code></td><td><code>&#123;&#123; obj | json &#125;&#125;</code></td><td>Pretty JSON</td></tr>
+          <tr><td><code>async</code></td><td><code>&#123;&#123; obs$ | async &#125;&#125;</code></td><td>Unwraps Observable/Promise</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3>Custom pipe</h3>
+      <pre><code><span class="cm">// A pipe is a class decorated with @Pipe.</span>
+<span class="cm">// 'name' is what you use in templates: | truncate</span>
+<span class="kw">import</span> { Pipe, PipeTransform }
+  <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dc">@Pipe</span>({
+  name: <span class="str">'truncate'</span>,
+  standalone: <span class="kw">true</span>
+})
+<span class="kw">export class</span> <span class="ty">TruncatePipe</span>
+  <span class="kw">implements</span> <span class="ty">PipeTransform</span> {
+
+  <span class="cm">// transform(value, ...args) is always the method name.</span>
+  <span class="cm">// value = whatever is left of the |</span>
+  <span class="cm">// limit = the argument after : in the template</span>
+  transform(
+    value: <span class="ty">string</span>,
+    limit = 50
+  ): <span class="ty">string</span> {
+    <span class="kw">return</span> value.length &gt; limit
+      ? value.slice(0, limit) + <span class="str">'…'</span>
+      : value;
+  }
+}</code></pre>
+      <pre><code><span class="cm">&lt;!-- To use: import TruncatePipe in @Component imports --&gt;</span>
+&lt;p&gt;{{ book.description | truncate:80 }}&lt;/p&gt;</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     11 HTTP & OBSERVABLES
+──────────────────────────────────────────── -->
+<section class="section" id="s11">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c11)">11</div>
+    <div class="section-meta">
+      <div class="section-title">HTTP &amp; Observables</div>
+      <div class="section-sub">HttpClient · RxJS Observable · async pipe · subscribe</div>
+    </div>
+  </div>
+
+  <h3>1 — Register the provider in app.config.ts</h3>
+  <pre><code><span class="cm">// Without this line, injecting HttpClient anywhere in the app will crash.</span>
+<span class="cm">// Add it once and it becomes available everywhere via inject(HttpClient).</span>
+<span class="kw">import</span> { provideHttpClient } <span class="kw">from</span> <span class="str">'@angular/common/http'</span>;
+
+providers: [ provideRouter(routes), provideHttpClient() ]</code></pre>
+
+  <h3>2 — Define the data shape (interface)</h3>
+  <pre><code><span class="cm">// Create src/app/models/book.model.ts</span>
+<span class="cm">// TypeScript interfaces describe the shape of objects.</span>
+<span class="cm">// They exist only at compile time — no runtime cost.</span>
+<span class="kw">export interface</span> Book {
+  id:     <span class="ty">number</span>;
+  title:  <span class="ty">string</span>;
+  author: <span class="ty">string</span>;
+}</code></pre>
+
+  <h3>3 — Create a service with HttpClient</h3>
+  <pre><code><span class="kw">import</span> { HttpClient } <span class="kw">from</span> <span class="str">'@angular/common/http'</span>;
+<span class="kw">import</span> { inject, Injectable } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { Observable } <span class="kw">from</span> <span class="str">'rxjs'</span>;
+
+<span class="dc">@Injectable</span>({ providedIn: <span class="str">'root'</span> })
+<span class="kw">export class</span> <span class="ty">BookService</span> {
+
+  <span class="cm">// HttpClient is Angular's built-in HTTP service</span>
+  <span class="kw">private</span> http = inject(HttpClient);
+  <span class="kw">private</span> url  = <span class="str">'https://api.example.com/books'</span>;
+
+  <span class="cm">// http.get&lt;T&gt;() returns an Observable&lt;T&gt;.</span>
+  <span class="cm">// Observables are LAZY — nothing happens until someone subscribes.</span>
+  getBooks(): Observable&lt;<span class="ty">Book</span>[]&gt; {
+    <span class="kw">return this</span>.http.get&lt;<span class="ty">Book</span>[]&gt;(<span class="kw">this</span>.url);
+  }
+
+  getBook(id: <span class="ty">number</span>): Observable&lt;<span class="ty">Book</span>&gt; {
+    <span class="cm">// Template literals build the URL: /books/42</span>
+    <span class="kw">return this</span>.http.get&lt;<span class="ty">Book</span>&gt;(<span class="str">`${this.url}/${id}`</span>);
+  }
+
+  create(b: <span class="ty">Book</span>): Observable&lt;<span class="ty">Book</span>&gt; {
+    <span class="cm">// POST sends the book object as the request body</span>
+    <span class="kw">return this</span>.http.post&lt;<span class="ty">Book</span>&gt;(<span class="kw">this</span>.url, b);
+  }
+
+  update(b: <span class="ty">Book</span>): Observable&lt;<span class="ty">Book</span>&gt; {
+    <span class="kw">return this</span>.http.put&lt;<span class="ty">Book</span>&gt;(<span class="str">`${this.url}/${b.id}`</span>, b);
+  }
+
+  remove(id: <span class="ty">number</span>): Observable&lt;<span class="ty">void</span>&gt; {
+    <span class="kw">return this</span>.http.delete&lt;<span class="ty">void</span>&gt;(<span class="str">`${this.url}/${id}`</span>);
+  }
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>Option A — manual subscribe</h3>
+      <pre><code><span class="cm">// You manage the subscription yourself.</span>
+<span class="cm">// Advantage: full control.</span>
+<span class="cm">// Risk: forgetting to unsubscribe causes memory leaks.</span>
+<span class="kw">export class</span> <span class="ty">BookList</span>
+  <span class="kw">implements</span> <span class="ty">OnInit</span>, <span class="ty">OnDestroy</span> {
+
+  <span class="kw">private</span> svc = inject(BookService);
+  books: Book[] = [];
+  <span class="kw">private</span> sub!: Subscription;
+
+  ngOnInit() {
+    <span class="kw">this</span>.sub = <span class="kw">this</span>.svc
+      .getBooks()
+      .subscribe({
+        next:  data =&gt; <span class="kw">this</span>.books = data,
+        error: err  =&gt; console.error(err)
+      });
+  }
+
+  ngOnDestroy() {
+    <span class="cm">// ALWAYS unsubscribe in ngOnDestroy</span>
+    <span class="kw">this</span>.sub.unsubscribe();
+  }
+}</code></pre>
+    </div>
+    <div>
+      <h3>Option B — async pipe <span class="badge new">Preferred</span></h3>
+      <pre><code><span class="cm">// The component just exposes the Observable.</span>
+<span class="cm">// The template subscribes via the async pipe.</span>
+<span class="cm">// Angular handles unsubscription automatically.</span>
+<span class="kw">export class</span> <span class="ty">BookList</span> {
+  <span class="kw">private</span> svc = inject(BookService);
+
+  <span class="cm">// $ suffix is a convention meaning "this is an Observable"</span>
+  books$ = <span class="kw">this</span>.svc.getBooks();
+}</code></pre>
+      <pre><code><span class="cm">&lt;!-- async pipe subscribes and gives you the value as 'books' --&gt;</span>
+<span class="cm">&lt;!-- It also auto-unsubscribes when component is destroyed --&gt;</span>
+@if (books$ | async; as books) {
+  @for (b of books; track b.id) {
+    &lt;p&gt;{{ b.title }}&lt;/p&gt;
+  }
+}</code></pre>
+      <div class="callout info">
+        <strong>async pipe prevents memory leaks</strong>
+        Angular unsubscribes automatically — no need to implement <code>OnDestroy</code>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     12 REACTIVE FORMS
+──────────────────────────────────────────── -->
+<section class="section" id="s12">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c12)">12</div>
+    <div class="section-meta">
+      <div class="section-title">Reactive Forms</div>
+      <div class="section-sub">FormBuilder · FormGroup · Validators · form binding</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>Component class</h3>
+      <pre><code><span class="cm">// ReactiveFormsModule must be in the component's imports array</span>
+<span class="kw">import</span> { ReactiveFormsModule,
+  FormBuilder, Validators }
+  <span class="kw">from</span> <span class="str">'@angular/forms'</span>;
+
+<span class="dc">@Component</span>({
+  imports: [ReactiveFormsModule],
+  ...
+})
+<span class="kw">export class</span> <span class="ty">LoginForm</span> {
+
+  <span class="cm">// FormBuilder is a helper that creates form controls</span>
+  <span class="kw">private</span> fb = inject(FormBuilder);
+
+  <span class="cm">// fb.group() creates a FormGroup (the whole form).</span>
+  <span class="cm">// Each key is a field name. The array is [initialValue, validators].</span>
+  form = <span class="kw">this</span>.fb.group({
+    email: [
+      <span class="str">''</span>,
+      <span class="cm">// Validators run on every change. All must pass for field to be valid.</span>
+      [Validators.required, Validators.email]
+    ],
+    password: [
+      <span class="str">''</span>,
+      [Validators.required, Validators.minLength(6)]
+    ]
+  });
+
+  onSubmit() {
+    <span class="cm">// form.valid is true only if ALL fields pass their validators</span>
+    <span class="kw">if</span> (<span class="kw">this</span>.form.valid) {
+      <span class="cm">// form.value is a typed object: { email: string, password: string }</span>
+      console.log(<span class="kw">this</span>.form.value);
+    }
+  }
+}</code></pre>
+    </div>
+    <div>
+      <h3>Template</h3>
+      <pre><code><span class="cm">&lt;!-- [formGroup] connects the &lt;form&gt; tag to our FormGroup instance --&gt;</span>
+<span class="cm">&lt;!-- (ngSubmit) fires when the user submits the form --&gt;</span>
+&lt;form
+  [formGroup]=<span class="str">"form"</span>
+  (ngSubmit)=<span class="str">"onSubmit()"</span>
+&gt;
+
+  <span class="cm">&lt;!-- formControlName links the input to a specific FormControl --&gt;</span>
+  &lt;input
+    formControlName=<span class="str">"email"</span>
+    type=<span class="str">"email"</span>
+    placeholder=<span class="str">"Email"</span>
+  /&gt;
+
+  <span class="cm">&lt;!-- Show error only after user has touched (clicked) the field --&gt;</span>
+  @if (form.get('email')?.hasError('required')
+    &amp;&amp; form.get('email')?.touched) {
+    &lt;p class=<span class="str">"error"</span>&gt;Email is required.&lt;/p&gt;
+  }
+  @if (form.get('email')?.hasError('email')
+    &amp;&amp; form.get('email')?.touched) {
+    &lt;p class=<span class="str">"error"</span>&gt;Please enter a valid email.&lt;/p&gt;
+  }
+
+  &lt;input
+    formControlName=<span class="str">"password"</span>
+    type=<span class="str">"password"</span>
+    placeholder=<span class="str">"Password"</span>
+  /&gt;
+
+  <span class="cm">&lt;!-- [disabled] prevents submit when form is invalid --&gt;</span>
+  &lt;button
+    type=<span class="str">"submit"</span>
+    [disabled]=<span class="str">"form.invalid"</span>
+  &gt;
+    Login
+  &lt;/button&gt;
+&lt;/form&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:0">
+    <div>
+      <h3>Common validators</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Validator</th><th>Error key</th><th>Checks</th></tr></thead>
+        <tbody>
+          <tr><td><code>Validators.required</code></td><td><code>required</code></td><td>Field is not empty</td></tr>
+          <tr><td><code>Validators.email</code></td><td><code>email</code></td><td>Valid email format</td></tr>
+          <tr><td><code>Validators.minLength(n)</code></td><td><code>minlength</code></td><td>At least n characters</td></tr>
+          <tr><td><code>Validators.maxLength(n)</code></td><td><code>maxlength</code></td><td>At most n characters</td></tr>
+          <tr><td><code>Validators.min(n)</code></td><td><code>min</code></td><td>Numeric value ≥ n</td></tr>
+          <tr><td><code>Validators.pattern(rx)</code></td><td><code>pattern</code></td><td>Matches regex</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="callout tip">
+        <strong>Useful form state properties</strong>
+        On the form group:<br>
+        <code>form.valid</code> · <code>form.invalid</code> · <code>form.value</code><br>
+        <code>form.dirty</code> (user typed) · <code>form.touched</code> (user clicked)<br><br>
+        On a specific control:<br>
+        <code>form.get('email')?.errors</code><br>
+        <code>form.get('email')?.hasError('required')</code><br>
+        <code>form.get('email')?.touched</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     13 GUARDS
+──────────────────────────────────────────── -->
+<section class="section" id="s13">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c13)">13</div>
+    <div class="section-meta">
+      <div class="section-title">Route Guards</div>
+      <div class="section-sub">Run logic before entering or leaving a route</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>auth.guard.ts</h3>
+      <pre><code><span class="cm">// A guard is a function (not a class) that returns:</span>
+<span class="cm">// true  → allow navigation</span>
+<span class="cm">// false → block silently</span>
+<span class="cm">// UrlTree → redirect to a different route</span>
+<span class="kw">import</span> { inject } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { CanActivateFn, Router }
+  <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="kw">export const</span> authGuard: CanActivateFn = () =&gt; {
+  <span class="cm">// inject() works inside guard functions too</span>
+  <span class="kw">const</span> auth   = inject(AuthService);
+  <span class="kw">const</span> router = inject(Router);
+
+  <span class="cm">// If logged in: let them through (return true)</span>
+  <span class="cm">// If not: redirect to /login</span>
+  <span class="kw">return</span> auth.isLoggedIn()
+    ? <span class="kw">true</span>
+    : router.createUrlTree([<span class="str">'/login'</span>]);
+};</code></pre>
+    </div>
+    <div>
+      <h3>Apply in app.routes.ts</h3>
+      <pre><code><span class="cm">// Add canActivate to any route that needs protecting</span>
+{
+  path: <span class="str">'books'</span>,
+  component: BookList,
+  <span class="cm">// Array — you can stack multiple guards</span>
+  canActivate: [authGuard]
+},
+{
+  path: <span class="str">'admin'</span>,
+  component: Admin,
+  <span class="cm">// Both guards must return true for navigation to proceed</span>
+  canActivate: [authGuard, adminGuard]
+}</code></pre>
+      <div class="callout info">
+        <strong>Guard return values</strong>
+        <code>true</code> — allow access<br>
+        <code>false</code> — block silently<br>
+        <code>router.createUrlTree(['/login'])</code> — redirect
+      </div>
+    </div>
+  </div>
+
+  <h3>Guard types</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Guard type</th><th>When it runs</th><th>Typical use</th></tr></thead>
+    <tbody>
+      <tr><td><code>CanActivateFn</code></td><td>Before entering a route</td><td>Auth check, role check</td></tr>
+      <tr><td><code>CanDeactivateFn</code></td><td>Before leaving a route</td><td>"Unsaved changes?" dialog</td></tr>
+      <tr><td><code>CanMatchFn</code></td><td>Before even matching the route</td><td>Feature flags, A/B testing</td></tr>
+      <tr><td><code>ResolveFn</code></td><td>Before activating — loads data first</td><td>Pre-load data before showing the page</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     14 TESTING
+──────────────────────────────────────────── -->
+<section class="section" id="s14">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c14)">14</div>
+    <div class="section-meta">
+      <div class="section-title">Testing with TestBed</div>
+      <div class="section-sub">TestBed · ComponentFixture · detectChanges · expect</div>
+    </div>
+  </div>
+
+  <h3>app.spec.ts <span class="badge project">This project</span></h3>
+  <pre><code><span class="cm">// Every .spec.ts file is a test file.</span>
+<span class="cm">// TestBed is Angular's testing utility — it creates a mini app for testing.</span>
+<span class="kw">import</span> { TestBed } <span class="kw">from</span> <span class="str">'@angular/core/testing'</span>;
+<span class="kw">import</span> { App } <span class="kw">from</span> <span class="str">'./app'</span>;
+
+<span class="cm">// describe() groups related tests</span>
+describe(<span class="str">'App'</span>, () =&gt; {
+
+  <span class="cm">// beforeEach runs before every 'it' test in this block</span>
+  beforeEach(<span class="kw">async</span> () =&gt; {
+    <span class="kw">await</span> TestBed.configureTestingModule({
+      <span class="cm">// Import the standalone component you want to test</span>
+      imports: [App],
+    }).compileComponents();
+  });
+
+  <span class="cm">// it() is a single test case</span>
+  it(<span class="str">'should create the app'</span>, () =&gt; {
+    <span class="cm">// Creates the component and returns a fixture (a wrapper)</span>
+    <span class="kw">const</span> fixture = TestBed.createComponent(App);
+    <span class="cm">// componentInstance is the actual class instance</span>
+    <span class="kw">const</span> app = fixture.componentInstance;
+    <span class="cm">// toBeTruthy() checks the value is not null/undefined/false</span>
+    expect(app).toBeTruthy();
+  });
+
+  it(<span class="str">'should render title'</span>, <span class="kw">async</span> () =&gt; {
+    <span class="kw">const</span> fixture  = TestBed.createComponent(App);
+    <span class="cm">// whenStable() waits for async operations (signals, HTTP) to settle</span>
+    <span class="kw">await</span> fixture.whenStable();
+    <span class="cm">// nativeElement is the rendered DOM — use it like document.querySelector</span>
+    <span class="kw">const</span> compiled = fixture.nativeElement <span class="kw">as</span> HTMLElement;
+    expect(compiled.querySelector(<span class="str">'h1'</span>)?.textContent)
+      .toContain(<span class="str">'Hello, book-app'</span>);
+  });
+});</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>5-step testing pattern</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Code</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>configureTestingModule(&#123;imports:[C]&#125;)</code></td><td>Set up the test module</td></tr>
+          <tr><td>2</td><td><code>TestBed.createComponent(C)</code></td><td>Get a <code>ComponentFixture</code></td></tr>
+          <tr><td>3</td><td><code>fixture.componentInstance</code></td><td>The class instance</td></tr>
+          <tr><td>4</td><td><code>fixture.nativeElement</code></td><td>The rendered DOM</td></tr>
+          <tr><td>5</td><td><code>fixture.detectChanges()</code></td><td>Trigger change detection</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="callout tip">
+        <strong>Testing a service</strong>
+        Use <code>TestBed.inject(MyService)</code> to get the service inside a test.<br><br>
+        Use <code>vi.fn()</code> (Vitest) or <code>jasmine.createSpyObj()</code> to mock dependencies so you test only one unit at a time.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     QUICK REFERENCE
+──────────────────────────────────────────── -->
+<section class="section" id="qr" style="background:#f8fafc">
+  <div class="section-header">
+    <div class="section-num" style="background:#475569">★</div>
+    <div class="section-meta">
+      <div class="section-title">Quick Reference</div>
+      <div class="section-sub">All key syntax at a glance</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="qr-block">
+        <h4>Core &amp; Signals</h4>
+        <div class="qr-row"><span class="qr-label">Bootstrap</span><span class="qr-code">bootstrapApplication(App, appConfig)</span></div>
+        <div class="qr-row"><span class="qr-label">Standalone component</span><span class="qr-code">@Component({ imports: [...] })</span></div>
+        <div class="qr-row"><span class="qr-label">Signal — create</span><span class="qr-code">count = signal(0)</span></div>
+        <div class="qr-row"><span class="qr-label">Signal — read</span><span class="qr-code">count()  ← call it like a function</span></div>
+        <div class="qr-row"><span class="qr-label">Signal — set</span><span class="qr-code">count.set(5)</span></div>
+        <div class="qr-row"><span class="qr-label">Signal — update</span><span class="qr-code">count.update(v => v + 1)</span></div>
+        <div class="qr-row"><span class="qr-label">Computed</span><span class="qr-code">computed(() => a() + b())</span></div>
+        <div class="qr-row"><span class="qr-label">Inject service</span><span class="qr-code">private svc = inject(MyService)</span></div>
+      </div>
+      <div class="qr-block">
+        <h4>Input &amp; Output (new signal syntax)</h4>
+        <div class="qr-row"><span class="qr-label">Optional input</span><span class="qr-code">title = input&lt;string&gt;('')</span></div>
+        <div class="qr-row"><span class="qr-label">Required input</span><span class="qr-code">bookId = input.required&lt;number&gt;()</span></div>
+        <div class="qr-row"><span class="qr-label">Read input (class)</span><span class="qr-code">this.title()  ← it's a Signal</span></div>
+        <div class="qr-row"><span class="qr-label">Read input (template)</span><span class="qr-code">{{ title() }}</span></div>
+        <div class="qr-row"><span class="qr-label">Output</span><span class="qr-code">selected = output&lt;number&gt;()</span></div>
+        <div class="qr-row"><span class="qr-label">Emit event</span><span class="qr-code">this.selected.emit(value)</span></div>
+        <div class="qr-row"><span class="qr-label">Parent passes input</span><span class="qr-code">[title]="book.title"</span></div>
+        <div class="qr-row"><span class="qr-label">Parent listens</span><span class="qr-code">(selected)="handleIt($event)"</span></div>
+      </div>
+      <div class="qr-block">
+        <h4>Routing</h4>
+        <div class="qr-row"><span class="qr-label">Navigate link</span><span class="qr-code">routerLink="/path"</span></div>
+        <div class="qr-row"><span class="qr-label">Active class</span><span class="qr-code">routerLinkActive="active"</span></div>
+        <div class="qr-row"><span class="qr-label">Exact match</span><span class="qr-code">[routerLinkActiveOptions]="{exact:true}"</span></div>
+        <div class="qr-row"><span class="qr-label">Outlet</span><span class="qr-code">&lt;router-outlet /&gt;</span></div>
+        <div class="qr-row"><span class="qr-label">Route params</span><span class="qr-code">route.snapshot.paramMap.get('id')</span></div>
+        <div class="qr-row"><span class="qr-label">Navigate</span><span class="qr-code">router.navigate(['/books', id])</span></div>
+        <div class="qr-row"><span class="qr-label">Guard</span><span class="qr-code">canActivate: [authGuard]</span></div>
+        <div class="qr-row"><span class="qr-label">Redirect</span><span class="qr-code">{ path:'', redirectTo:'/home', pathMatch:'full' }</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="qr-block">
+        <h4>Templates &amp; Binding</h4>
+        <div class="qr-row"><span class="qr-label">Interpolation</span><span class="qr-code">{{ value }}</span></div>
+        <div class="qr-row"><span class="qr-label">Property bind</span><span class="qr-code">[src]="imageUrl"</span></div>
+        <div class="qr-row"><span class="qr-label">Event bind</span><span class="qr-code">(click)="handler()"</span></div>
+        <div class="qr-row"><span class="qr-label">Two-way</span><span class="qr-code">[(ngModel)]="field"</span></div>
+        <div class="qr-row"><span class="qr-label">Condition</span><span class="qr-code">@if (cond) { ... } @else { ... }</span></div>
+        <div class="qr-row"><span class="qr-label">Loop</span><span class="qr-code">@for (x of list; track x.id) { }</span></div>
+        <div class="qr-row"><span class="qr-label">Async pipe</span><span class="qr-code">obs$ | async</span></div>
+      </div>
+      <div class="qr-block">
+        <h4>Reactive Forms</h4>
+        <div class="qr-row"><span class="qr-label">Build form</span><span class="qr-code">fb.group({ f: ['', Validators.required] })</span></div>
+        <div class="qr-row"><span class="qr-label">Bind group</span><span class="qr-code">[formGroup]="form"</span></div>
+        <div class="qr-row"><span class="qr-label">Bind field</span><span class="qr-code">formControlName="fieldName"</span></div>
+        <div class="qr-row"><span class="qr-label">Submit</span><span class="qr-code">(ngSubmit)="onSubmit()"</span></div>
+        <div class="qr-row"><span class="qr-label">Check error</span><span class="qr-code">form.get('f')?.hasError('required')</span></div>
+        <div class="qr-row"><span class="qr-label">Disable btn</span><span class="qr-code">[disabled]="form.invalid"</span></div>
+      </div>
+      <div class="qr-block">
+        <h4>Project setup checklist</h4>
+        <div class="qr-row"><span class="qr-label">New project</span><span class="qr-code">ng new app --routing --style=css</span></div>
+        <div class="qr-row"><span class="qr-label">Dev server</span><span class="qr-code">ng serve</span></div>
+        <div class="qr-row"><span class="qr-label">New component</span><span class="qr-code">ng g c components/book-list</span></div>
+        <div class="qr-row"><span class="qr-label">New service</span><span class="qr-code">ng g s services/book</span></div>
+        <div class="qr-row"><span class="qr-label">Run tests</span><span class="qr-code">ng test</span></div>
+        <div class="qr-row"><span class="qr-label">Build prod</span><span class="qr-code">ng build</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+</body>
+</html>
+
+<!-- ══════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="wordmark">A<span>ng</span>ular</div>
+    <div class="sub">Sprint 5 · Study Guide</div>
+  </div>
+  <nav>
+    <div class="nav-label">Topics</div>
+    <a class="nav-item" href="#s1"><span class="num" style="background:var(--c1)">1</span> App Bootstrap</a>
+    <a class="nav-item" href="#s2"><span class="num" style="background:var(--c2)">2</span> Components</a>
+    <a class="nav-item" href="#s3"><span class="num" style="background:var(--c3)">3</span> Data Binding</a>
+    <a class="nav-item" href="#s4"><span class="num" style="background:var(--c4)">4</span> Routing</a>
+    <a class="nav-item" href="#s5"><span class="num" style="background:var(--c5)">5</span> Dependency Injection</a>
+    <a class="nav-item" href="#s6"><span class="num" style="background:var(--c6)">6</span> Signals</a>
+    <a class="nav-item" href="#s7"><span class="num" style="background:var(--c7)">7</span> Lifecycle Hooks</a>
+    <a class="nav-item" href="#s8"><span class="num" style="background:var(--c8)">8</span> @Input &amp; @Output</a>
+    <a class="nav-item" href="#s9"><span class="num" style="background:var(--c9)">9</span> Directives</a>
+    <a class="nav-item" href="#s10"><span class="num" style="background:var(--c10)">10</span> Pipes</a>
+    <a class="nav-item" href="#s11"><span class="num" style="background:var(--c11)">11</span> HTTP &amp; Observables</a>
+    <a class="nav-item" href="#s12"><span class="num" style="background:var(--c12)">12</span> Reactive Forms</a>
+    <a class="nav-item" href="#s13"><span class="num" style="background:var(--c13)">13</span> Route Guards</a>
+    <a class="nav-item" href="#s14"><span class="num" style="background:var(--c14)">14</span> Testing</a>
+    <div class="nav-label" style="margin-top:8px">Reference</div>
+    <a class="nav-item star" href="#qr"><span class="num">★</span> Quick Reference</a>
+  </nav>
+</aside>
+
+<!-- ══════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════ -->
+<main class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Angular · Sprint 5 Advanced</div>
+  <h1>The <em>Complete</em><br>Study Guide</h1>
+  <p>Everything from app startup to routing, signals, HTTP, forms and testing — with real examples from the BookApp project.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">Angular v17+</span>
+    <span class="hero-tag">Standalone Components</span>
+    <span class="hero-tag">Signals</span>
+    <span class="hero-tag">RxJS</span>
+    <span class="hero-tag">Reactive Forms</span>
+    <span class="hero-tag">Vitest</span>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────
+     01 BOOTSTRAP
+──────────────────────────────────────────── -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c1)">01</div>
+    <div class="section-meta">
+      <div class="section-title">How an Angular App Starts</div>
+      <div class="section-sub">main.ts → app.config.ts → root component</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>src/main.ts <span class="badge project">This project</span></h3>
+      <pre><code><span class="kw">import</span> { bootstrapApplication } <span class="kw">from</span>
+  <span class="str">'@angular/platform-browser'</span>;
+<span class="kw">import</span> { appConfig } <span class="kw">from</span> <span class="str">'./app/app.config'</span>;
+<span class="kw">import</span> { App } <span class="kw">from</span> <span class="str">'./app/app'</span>;
+
+bootstrapApplication(App, appConfig)
+  .catch(err =&gt; console.error(err));</code></pre>
+      <div class="callout tip">
+        <strong>Key Concept</strong>
+        Modern Angular uses <code>bootstrapApplication()</code> with a standalone root component — no <code>AppModule</code> needed.
+      </div>
+    </div>
+    <div>
+      <h3>src/app/app.config.ts <span class="badge project">This project</span></h3>
+      <pre><code><span class="kw">import</span> { ApplicationConfig,
+  provideBrowserGlobalErrorListeners }
+  <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { provideRouter } <span class="kw">from</span>
+  <span class="str">'@angular/router'</span>;
+
+<span class="kw">export const</span> <span class="vr">appConfig</span>: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes),
+    <span class="cm">// provideHttpClient() — add when needed</span>
+  ]
+};</code></pre>
+    </div>
+  </div>
+
+  <h3>Common providers</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Provider</th><th>Import from</th><th>What it gives you</th></tr></thead>
+    <tbody>
+      <tr><td><code>provideRouter(routes)</code></td><td>@angular/router</td><td>Client-side routing</td></tr>
+      <tr><td><code>provideHttpClient()</code></td><td>@angular/common/http</td><td>HTTP requests via HttpClient</td></tr>
+      <tr><td><code>provideAnimations()</code></td><td>@angular/platform-browser/animations</td><td>Angular animations</td></tr>
+      <tr><td><code>provideBrowserGlobalErrorListeners()</code></td><td>@angular/core</td><td>Global error handling</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     02 COMPONENTS
+──────────────────────────────────────────── -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c2)">02</div>
+    <div class="section-meta">
+      <div class="section-title">Components — The Building Block</div>
+      <div class="section-sub">@Component · selector · imports · standalone</div>
+    </div>
+  </div>
+
+  <h3>Anatomy of a standalone component <span class="badge project">This project</span></h3>
+  <pre><code><span class="cm">// src/app/app.ts</span>
+<span class="kw">import</span> { Component, signal } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { RouterOutlet, RouterLinkWithHref, RouterLinkActive }
+  <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="dc">@Component</span>({
+  selector:    <span class="str">'app-root'</span>,    <span class="cm">// used as &lt;app-root /&gt; in HTML</span>
+  imports:     [RouterOutlet, RouterLinkWithHref, RouterLinkActive],
+  templateUrl: <span class="str">'./app.html'</span>,  <span class="cm">// external template</span>
+  styleUrl:    <span class="str">'./app.css'</span>   <span class="cm">// scoped to this component only</span>
+})
+<span class="kw">export class</span> <span class="ty">App</span> {
+  <span class="kw">protected readonly</span> <span class="vr">title</span> = signal(<span class="str">'book-app'</span>);
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>@Component decorator fields</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>selector</code></td><td>CSS selector to use this component in HTML</td></tr>
+          <tr><td><code>imports</code></td><td>Other components, directives, pipes used inside</td></tr>
+          <tr><td><code>templateUrl</code></td><td>External HTML template file</td></tr>
+          <tr><td><code>template</code></td><td>Inline HTML (alternative)</td></tr>
+          <tr><td><code>styleUrl</code></td><td>External CSS scoped to this component</td></tr>
+          <tr><td><code>changeDetection</code></td><td><code>OnPush</code> for performance</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3>Components in this project</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Component</th><th>Route</th></tr></thead>
+        <tbody>
+          <tr><td><code>App</code></td><td>Root shell (always visible)</td></tr>
+          <tr><td><code>Home</code></td><td><code>/</code></td></tr>
+          <tr><td><code>BookList</code></td><td><code>/books</code></td></tr>
+          <tr><td><code>BookDetails</code></td><td><code>/books/:bookId</code></td></tr>
+          <tr><td><code>NotFound</code></td><td><code>**</code> — 404 catch-all</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>Best Practice</strong>
+    With standalone components, each component declares its own <code>imports</code>. No shared NgModule needed. This enables tree-shaking and smaller bundles.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     03 DATA BINDING
+──────────────────────────────────────────── -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c3)">03</div>
+    <div class="section-meta">
+      <div class="section-title">Templates &amp; Data Binding</div>
+      <div class="section-sub">Interpolation · Property · Event · Two-way</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="binding-card">
+      <div class="binding-header" style="background:#7c3aed">&#123;&#123; &#125;&#125; &nbsp; Interpolation — Component → DOM text</div>
+      <div class="binding-body"><span class="cm">// component</span>
+name = <span class="str">'Angular'</span>;
+title = signal(<span class="str">'book-app'</span>);
+
+<span class="cm">&lt;!-- template --&gt;</span>
+&lt;h1&gt;Hello, {{ name }}&lt;/h1&gt;
+&lt;p&gt;{{ title() }}&lt;/p&gt;  <span class="cm">// signals: call it</span></div>
+    </div>
+    <div class="binding-card">
+      <div class="binding-header" style="background:#2563eb">[ ] &nbsp; Property Binding — Component → DOM</div>
+      <div class="binding-body"><span class="cm">// component</span>
+isDisabled = <span class="kw">true</span>;
+imgUrl = <span class="str">'logo.png'</span>;
+
+<span class="cm">&lt;!-- template --&gt;</span>
+&lt;button [disabled]=<span class="str">"isDisabled"</span>&gt;OK&lt;/button&gt;
+&lt;img [src]=<span class="str">"imgUrl"</span> /&gt;</div>
+    </div>
+    <div class="binding-card">
+      <div class="binding-header" style="background:#0d9373">( ) &nbsp; Event Binding — DOM → Component</div>
+      <div class="binding-body"><span class="cm">// component</span>
+onSave() { <span class="cm">/* ... */</span> }
+onType(e: Event) { <span class="cm">/* ... */</span> }
+
+<span class="cm">&lt;!-- template --&gt;</span>
+&lt;button (click)=<span class="str">"onSave()"</span>&gt;Save&lt;/button&gt;
+&lt;input (input)=<span class="str">"onType($event)"</span> /&gt;</div>
+    </div>
+    <div class="binding-card">
+      <div class="binding-header" style="background:#dd0031">[(  )] &nbsp; Two-Way — Component ↔ DOM</div>
+      <div class="binding-body"><span class="cm">// needs FormsModule imported</span>
+searchTerm = <span class="str">''</span>;
+
+<span class="cm">&lt;!-- template --&gt;</span>
+&lt;input [(ngModel)]=<span class="str">"searchTerm"</span> /&gt;
+&lt;p&gt;You typed: {{ searchTerm }}&lt;/p&gt;</div>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <strong>From this project — app.html</strong>
+    <code>[routerLinkActiveOptions]="&#123; exact: true &#125;"</code> is property binding — passing an object literal from the template into a directive input.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     04 ROUTING
+──────────────────────────────────────────── -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c4)">04</div>
+    <div class="section-meta">
+      <div class="section-title">Routing</div>
+      <div class="section-sub">Routes · RouterOutlet · routerLink · params · navigate</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>app.routes.ts <span class="badge project">This project</span></h3>
+      <pre><code><span class="kw">export const</span> <span class="vr">routes</span>: Routes = [
+  { path: <span class="str">''</span>,              component: Home },
+  { path: <span class="str">'books'</span>,         component: BookList },
+  { path: <span class="str">'books/:bookId'</span>, component: BookDetails },
+  { path: <span class="str">''</span>, redirectTo: <span class="str">'home'</span>,
+          pathMatch: <span class="str">'full'</span> },
+  { path: <span class="str">'**'</span>,            component: NotFound }
+];</code></pre>
+      <div class="callout warn">
+        <strong>Route Order Matters</strong>
+        Specific routes first. Redirects before wildcard. <strong><code>**</code> always last.</strong>
+      </div>
+    </div>
+    <div>
+      <h3>app.html <span class="badge project">This project</span></h3>
+      <pre><code>&lt;nav&gt;
+  &lt;a routerLink=<span class="str">"/"</span>
+     routerLinkActive=<span class="str">"active-link"</span>
+     [routerLinkActiveOptions]=<span class="str">"&#123;exact:true&#125;"</span>&gt;
+    Inici
+  &lt;/a&gt;
+  &lt;a routerLink=<span class="str">"books"</span>
+     routerLinkActive=<span class="str">"active-link"</span>&gt;
+    Llibres
+  &lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;router-outlet /&gt;</code></pre>
+    </div>
+  </div>
+
+  <h3>Reading route parameters</h3>
+  <pre><code><span class="kw">import</span> { ActivatedRoute } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+<span class="kw">import</span> { inject } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="kw">export class</span> <span class="ty">BookDetails</span> <span class="kw">implements</span> <span class="ty">OnInit</span> {
+  <span class="kw">private</span> route = inject(ActivatedRoute);
+
+  ngOnInit() {
+    <span class="cm">// snapshot: reads once (fine when param won't change while view is open)</span>
+    <span class="kw">const</span> id = <span class="kw">this</span>.route.snapshot.paramMap.get(<span class="str">'bookId'</span>);
+
+    <span class="cm">// observable: updates reactively if param changes</span>
+    <span class="kw">this</span>.route.paramMap.subscribe(params =&gt; {
+      <span class="kw">const</span> id = params.get(<span class="str">'bookId'</span>);
+    });
+  }
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>Programmatic navigation</h3>
+      <pre><code><span class="kw">private</span> router = inject(Router);
+
+goToBook(id: <span class="ty">number</span>) {
+  <span class="kw">this</span>.router.navigate([<span class="str">'/books'</span>, id]);
+}
+goHome() {
+  <span class="kw">this</span>.router.navigateByUrl(<span class="str">'/'</span>);
+}</code></pre>
+    </div>
+    <div>
+      <h3>Routing directives</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Directive</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>routerLink</code></td><td>Navigate on click</td></tr>
+          <tr><td><code>routerLinkActive</code></td><td>Add class when route is active</td></tr>
+          <tr><td><code>[routerLinkActiveOptions]</code></td><td>Options — e.g. <code>&#123;exact:true&#125;</code></td></tr>
+          <tr><td><code>&lt;router-outlet&gt;</code></td><td>Slot where matched component renders</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     05 DI
+──────────────────────────────────────────── -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c5)">05</div>
+    <div class="section-meta">
+      <div class="section-title">Dependency Injection &amp; Services</div>
+      <div class="section-sub">@Injectable · inject() · providedIn</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>Creating a service</h3>
+      <pre><code><span class="kw">import</span> { Injectable } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dc">@Injectable</span>({ providedIn: <span class="str">'root'</span> })
+<span class="kw">export class</span> <span class="ty">BookService</span> {
+
+  <span class="kw">private</span> books: Book[] = [
+    { id: 1, title: <span class="str">'Clean Code'</span> }
+  ];
+
+  getBooks() { <span class="kw">return this</span>.books; }
+}</code></pre>
+      <div class="callout info">
+        <strong>providedIn: 'root'</strong>
+        Angular creates one singleton for the whole app. No need to add it to any <code>providers</code> array.
+      </div>
+    </div>
+    <div>
+      <h3>Injecting a service — two styles</h3>
+      <pre><code><span class="cm">// Modern — inject() function (Angular 14+)</span>
+<span class="kw">export class</span> <span class="ty">BookList</span> {
+  <span class="kw">private</span> svc = inject(BookService);
+  books = <span class="kw">this</span>.svc.getBooks();
+}
+
+<span class="cm">// Classic — constructor injection</span>
+<span class="kw">export class</span> <span class="ty">BookList</span> {
+  <span class="kw">constructor</span>(<span class="kw">private</span> svc: BookService) {}
+
+  ngOnInit() {
+    <span class="kw">this</span>.books = <span class="kw">this</span>.svc.getBooks();
+  }
+}</code></pre>
+      <div class="callout tip">
+        <strong>Rule of thumb</strong>
+        Prefer <code>inject()</code> in modern Angular — it works outside the constructor too (e.g., in field initialisers).
+      </div>
+    </div>
+  </div>
+
+  <h3>Providing at different levels</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Level</th><th>How</th><th>Scope / lifetime</th></tr></thead>
+    <tbody>
+      <tr><td>Root (app-wide)</td><td><code>@Injectable({ providedIn: 'root' })</code></td><td>One singleton shared across the entire app</td></tr>
+      <tr><td>Component</td><td><code>@Component({ providers: [MyService] })</code></td><td>New instance per component (and its children)</td></tr>
+      <tr><td>App config</td><td><code>appConfig.providers: [MyService]</code></td><td>Same as root</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     06 SIGNALS
+──────────────────────────────────────────── -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c6)">06</div>
+    <div class="section-meta">
+      <div class="section-title">Signals — Modern Reactivity</div>
+      <div class="section-sub">signal() · computed() · effect() — Angular 17+</div>
+    </div>
+  </div>
+
+  <div class="callout key">
+    <strong>What is a Signal?</strong>
+    A reactive value Angular tracks automatically. When a signal changes, any template or <code>computed()</code> that reads it re-renders. Always synchronous, always has a current value.
+  </div>
+
+  <h3>Already in this project — app.ts <span class="badge project">This project</span></h3>
+  <pre><code><span class="kw">protected readonly</span> title = signal(<span class="str">'book-app'</span>);
+<span class="cm">// In template: {{ title() }}  ← call it like a function</span></code></pre>
+
+  <h3>Full signals API</h3>
+  <pre><code><span class="kw">import</span> { signal, computed, effect } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="kw">export class</span> <span class="ty">CounterComponent</span> {
+  count   = signal(0);                              <span class="cm">// 1. writable signal</span>
+  doubled = computed(() =&gt; <span class="kw">this</span>.count() * 2);    <span class="cm">// 2. derived — recomputes automatically</span>
+
+  <span class="kw">constructor</span>() {
+    effect(() =&gt; console.log(<span class="str">'count:'</span>, <span class="kw">this</span>.count())); <span class="cm">// 3. side effect</span>
+  }
+
+  increment() { <span class="kw">this</span>.count.update(v =&gt; v + 1); }  <span class="cm">// update from previous value</span>
+  reset()     { <span class="kw">this</span>.count.set(0); }               <span class="cm">// set directly</span>
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>Signal methods at a glance</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>signal(val)</code></td><td>Create a writable signal</td></tr>
+          <tr><td><code>sig()</code></td><td>Read the current value</td></tr>
+          <tr><td><code>sig.set(val)</code></td><td>Replace value</td></tr>
+          <tr><td><code>sig.update(fn)</code></td><td>Update based on previous</td></tr>
+          <tr><td><code>computed(fn)</code></td><td>Read-only derived signal</td></tr>
+          <tr><td><code>effect(fn)</code></td><td>Run side effect on change</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="callout warn">
+        <strong>Signals vs Observables</strong>
+        <strong>Signals</strong> — synchronous, always have a value, no subscription needed. Best for component state.<br><br>
+        <strong>Observables</strong> — async streams, multiple values over time. Use for HTTP, DOM events, timers.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     07 LIFECYCLE
+──────────────────────────────────────────── -->
+<section class="section" id="s7">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c7)">07</div>
+    <div class="section-meta">
+      <div class="section-title">Lifecycle Hooks</div>
+      <div class="section-sub">ngOnInit · ngOnChanges · ngAfterViewInit · ngOnDestroy</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="lifecycle">
+        <div class="lc-item grey">
+          <div class="lc-name">constructor()</div>
+          <div class="lc-desc">Class is created. Inputs not set yet.</div>
+          <div class="lc-use">→ Inject services only.</div>
+        </div>
+        <div class="lc-item blue">
+          <div class="lc-name">ngOnChanges(changes)</div>
+          <div class="lc-desc">Called every time an <code>@Input()</code> value changes. Runs before <code>ngOnInit</code> on first render.</div>
+          <div class="lc-use">→ React to parent data changes.</div>
+        </div>
+        <div class="lc-item green">
+          <div class="lc-name">ngOnInit()</div>
+          <div class="lc-desc">Called once after first <code>ngOnChanges</code>. Inputs are now available.</div>
+          <div class="lc-use">→ Fetch data, subscribe to observables.</div>
+        </div>
+        <div class="lc-item amber">
+          <div class="lc-name">ngAfterViewInit()</div>
+          <div class="lc-desc">Called after the component's view and children are fully rendered.</div>
+          <div class="lc-use">→ Access <code>@ViewChild</code>, DOM refs.</div>
+        </div>
+        <div class="lc-item red">
+          <div class="lc-name">ngOnDestroy()</div>
+          <div class="lc-desc">Called just before the component is removed from the DOM.</div>
+          <div class="lc-use">→ Unsubscribe, clear timers, clean up.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>Implementation</h3>
+      <pre><code><span class="kw">import</span> { OnInit, OnDestroy, OnChanges,
+  SimpleChanges } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="kw">export class</span> <span class="ty">BookDetails</span>
+  <span class="kw">implements</span> <span class="ty">OnInit</span>, <span class="ty">OnDestroy</span> {
+
+  <span class="kw">private</span> sub!: Subscription;
+
+  ngOnInit() {
+    <span class="kw">this</span>.sub = <span class="kw">this</span>.svc
+      .getBook(id)
+      .subscribe(book =&gt; {
+        <span class="kw">this</span>.book = book;
+      });
+  }
+
+  ngOnDestroy() {
+    <span class="kw">this</span>.sub.unsubscribe();
+    <span class="cm">// prevent memory leak!</span>
+  }
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     08 INPUT OUTPUT
+──────────────────────────────────────────── -->
+<section class="section" id="s8">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c8)">08</div>
+    <div class="section-meta">
+      <div class="section-title">@Input &amp; @Output</div>
+      <div class="section-sub">Parent → Child · Child → Parent · EventEmitter</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>Parent → Child &nbsp;<code>@Input()</code></h3>
+      <pre><code><span class="cm">// child: book-card.ts</span>
+<span class="dc">@Input</span>() title: <span class="ty">string</span> = <span class="str">''</span>;
+<span class="dc">@Input</span>() author: <span class="ty">string</span> = <span class="str">''</span>;
+<span class="dc">@Input</span>({ required: <span class="kw">true</span> }) bookId!: <span class="ty">number</span>;</code></pre>
+      <pre><code><span class="cm">&lt;!-- parent template --&gt;</span>
+&lt;app-book-card
+  [title]=<span class="str">"book.title"</span>
+  [author]=<span class="str">"book.author"</span>
+  [bookId]=<span class="str">"book.id"</span> /&gt;</code></pre>
+    </div>
+    <div>
+      <h3>Child → Parent &nbsp;<code>@Output()</code></h3>
+      <pre><code><span class="cm">// child: book-card.ts</span>
+<span class="dc">@Output</span>() selected =
+  <span class="kw">new</span> EventEmitter&lt;<span class="ty">number</span>&gt;();
+
+onSelect() {
+  <span class="kw">this</span>.selected.emit(<span class="kw">this</span>.bookId);
+}</code></pre>
+      <pre><code><span class="cm">&lt;!-- parent template --&gt;</span>
+&lt;app-book-card
+  (selected)=<span class="str">"handleSelected($event)"</span> /&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <strong>Communication flow</strong>
+    Data flows <strong>down</strong> via <code>@Input()</code> (property binding on the parent). Events flow <strong>up</strong> via <code>@Output()</code> + <code>EventEmitter.emit()</code>. Keep components decoupled — they should not know about each other directly.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     09 DIRECTIVES
+──────────────────────────────────────────── -->
+<section class="section" id="s9">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c9)">09</div>
+    <div class="section-meta">
+      <div class="section-title">Built-in Directives</div>
+      <div class="section-sub">@if · @for · @switch · *ngIf · *ngFor · ngClass · ngStyle</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>New control flow <span class="badge new">Angular 17+</span></h3>
+      <pre><code><span class="cm">&lt;!-- @if / @else --&gt;</span>
+@if (books.length &gt; 0) {
+  &lt;p&gt;Found {{ books.length }} books&lt;/p&gt;
+} @else {
+  &lt;p&gt;No books found.&lt;/p&gt;
+}
+
+<span class="cm">&lt;!-- @for — always include track --&gt;</span>
+@for (book of books; track book.id) {
+  &lt;app-book-card [title]=<span class="str">"book.title"</span> /&gt;
+} @empty {
+  &lt;p&gt;The list is empty.&lt;/p&gt;
+}
+
+<span class="cm">&lt;!-- @switch --&gt;</span>
+@switch (status) {
+  @case (<span class="str">'loading'</span>) { &lt;spinner /&gt; }
+  @case (<span class="str">'error'</span>)   { &lt;p&gt;Error!&lt;/p&gt; }
+  @default            { &lt;p&gt;OK&lt;/p&gt; }
+}</code></pre>
+    </div>
+    <div>
+      <h3>Classic directives <span class="badge classic">Still valid</span></h3>
+      <pre><code><span class="cm">&lt;!-- *ngIf with else --&gt;</span>
+&lt;div *ngIf=<span class="str">"isLoggedIn; else noAccess"</span>&gt;
+  Welcome!
+&lt;/div&gt;
+&lt;ng-template #noAccess&gt;Login please&lt;/ng-template&gt;
+
+<span class="cm">&lt;!-- *ngFor --&gt;</span>
+&lt;li *ngFor=<span class="str">"let book of books;
+  trackBy: trackById"</span>&gt;
+  {{ book.title }}
+&lt;/li&gt;
+
+<span class="cm">&lt;!-- [ngClass] / [ngStyle] --&gt;</span>
+&lt;p [ngClass]=<span class="str">"&#123;
+  active: isActive,
+  error:  hasError
+&#125;"</span>&gt;&lt;/p&gt;
+&lt;div [ngStyle]=<span class="str">"&#123; color: fg &#125;"</span>&gt;&lt;/div&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <strong>Always use track in @for</strong>
+    <code>track book.id</code> tells Angular which items changed. Without it, Angular re-renders the whole list on every change. Performance matters.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     10 PIPES
+──────────────────────────────────────────── -->
+<section class="section" id="s10">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c10)">10</div>
+    <div class="section-meta">
+      <div class="section-title">Pipes</div>
+      <div class="section-sub">Transform display values in templates</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>Built-in pipes</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Pipe</th><th>Example</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td><code>uppercase</code></td><td><code>&#123;&#123; 'hi' | uppercase &#125;&#125;</code></td><td>HI</td></tr>
+          <tr><td><code>lowercase</code></td><td><code>&#123;&#123; 'HI' | lowercase &#125;&#125;</code></td><td>hi</td></tr>
+          <tr><td><code>date</code></td><td><code>&#123;&#123; d | date:'dd/MM/yyyy' &#125;&#125;</code></td><td>12/04/2026</td></tr>
+          <tr><td><code>currency</code></td><td><code>&#123;&#123; 9.99 | currency:'EUR' &#125;&#125;</code></td><td>€9.99</td></tr>
+          <tr><td><code>number</code></td><td><code>&#123;&#123; 3.14 | number:'1.2-2' &#125;&#125;</code></td><td>3.14</td></tr>
+          <tr><td><code>slice</code></td><td><code>&#123;&#123; arr | slice:0:3 &#125;&#125;</code></td><td>First 3 items</td></tr>
+          <tr><td><code>json</code></td><td><code>&#123;&#123; obj | json &#125;&#125;</code></td><td>Pretty JSON string</td></tr>
+          <tr><td><code>async</code></td><td><code>&#123;&#123; obs$ | async &#125;&#125;</code></td><td>Unwraps an Observable</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3>Custom pipe</h3>
+      <pre><code><span class="kw">import</span> { Pipe, PipeTransform }
+  <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="dc">@Pipe</span>({
+  name: <span class="str">'truncate'</span>,
+  standalone: <span class="kw">true</span>
+})
+<span class="kw">export class</span> <span class="ty">TruncatePipe</span>
+  <span class="kw">implements</span> <span class="ty">PipeTransform</span> {
+
+  transform(
+    value: <span class="ty">string</span>,
+    limit = 50
+  ): <span class="ty">string</span> {
+    <span class="kw">return</span> value.length &gt; limit
+      ? value.slice(0, limit) + <span class="str">'…'</span>
+      : value;
+  }
+}</code></pre>
+      <pre><code><span class="cm">&lt;!-- usage --&gt;</span>
+&lt;p&gt;{{ book.description | truncate:80 }}&lt;/p&gt;</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     11 HTTP
+──────────────────────────────────────────── -->
+<section class="section" id="s11">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c11)">11</div>
+    <div class="section-meta">
+      <div class="section-title">HTTP &amp; Observables</div>
+      <div class="section-sub">HttpClient · RxJS · async pipe · subscribe</div>
+    </div>
+  </div>
+
+  <h3>1 — Register provider in app.config.ts</h3>
+  <pre><code><span class="kw">import</span> { provideHttpClient } <span class="kw">from</span> <span class="str">'@angular/common/http'</span>;
+
+providers: [ provideRouter(routes), provideHttpClient() ]</code></pre>
+
+  <h3>2 — Service with HttpClient</h3>
+  <pre><code><span class="kw">import</span> { HttpClient } <span class="kw">from</span> <span class="str">'@angular/common/http'</span>;
+<span class="kw">import</span> { inject, Injectable } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { Observable } <span class="kw">from</span> <span class="str">'rxjs'</span>;
+
+<span class="kw">export interface</span> Book { id: <span class="ty">number</span>; title: <span class="ty">string</span>; author: <span class="ty">string</span>; }
+
+<span class="dc">@Injectable</span>({ providedIn: <span class="str">'root'</span> })
+<span class="kw">export class</span> <span class="ty">BookService</span> {
+  <span class="kw">private</span> http = inject(HttpClient);
+  <span class="kw">private</span> url  = <span class="str">'https://api.example.com/books'</span>;
+
+  getBooks():            Observable&lt;Book[]&gt; { <span class="kw">return this</span>.http.get&lt;Book[]&gt;(<span class="kw">this</span>.url); }
+  getBook(id: <span class="ty">number</span>): Observable&lt;Book&gt;   { <span class="kw">return this</span>.http.get&lt;Book&gt;(<span class="str">`${this.url}/${id}`</span>); }
+  create(b: Book):       Observable&lt;Book&gt;   { <span class="kw">return this</span>.http.post&lt;Book&gt;(<span class="kw">this</span>.url, b); }
+  update(b: Book):       Observable&lt;Book&gt;   { <span class="kw">return this</span>.http.put&lt;Book&gt;(<span class="str">`${this.url}/${b.id}`</span>, b); }
+  remove(id: <span class="ty">number</span>):  Observable&lt;void&gt;   { <span class="kw">return this</span>.http.delete&lt;void&gt;(<span class="str">`${this.url}/${id}`</span>); }
+}</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>Option A — manual subscribe</h3>
+      <pre><code><span class="kw">export class</span> <span class="ty">BookList</span>
+  <span class="kw">implements</span> <span class="ty">OnInit</span>, <span class="ty">OnDestroy</span> {
+
+  <span class="kw">private</span> svc = inject(BookService);
+  books: Book[] = [];
+  <span class="kw">private</span> sub!: Subscription;
+
+  ngOnInit() {
+    <span class="kw">this</span>.sub = <span class="kw">this</span>.svc
+      .getBooks()
+      .subscribe({
+        next:  data =&gt; <span class="kw">this</span>.books = data,
+        error: err  =&gt; console.error(err)
+      });
+  }
+
+  ngOnDestroy() {
+    <span class="kw">this</span>.sub.unsubscribe();
+  }
+}</code></pre>
+    </div>
+    <div>
+      <h3>Option B — async pipe <span class="badge new">Preferred</span></h3>
+      <pre><code><span class="cm">// component — no subscribe needed</span>
+<span class="kw">export class</span> <span class="ty">BookList</span> {
+  <span class="kw">private</span> svc = inject(BookService);
+  books$ = <span class="kw">this</span>.svc.getBooks();
+}</code></pre>
+      <pre><code><span class="cm">&lt;!-- template --&gt;</span>
+@if (books$ | async; as books) {
+  @for (b of books; track b.id) {
+    &lt;p&gt;{{ b.title }}&lt;/p&gt;
+  }
+}</code></pre>
+      <div class="callout info">
+        <strong>async pipe handles unsubscription</strong>
+        Angular automatically unsubscribes when the component is destroyed — no memory leaks.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     12 REACTIVE FORMS
+──────────────────────────────────────────── -->
+<section class="section" id="s12">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c12)">12</div>
+    <div class="section-meta">
+      <div class="section-title">Reactive Forms</div>
+      <div class="section-sub">FormBuilder · FormGroup · Validators · binding</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>Component</h3>
+      <pre><code><span class="kw">import</span> { ReactiveFormsModule,
+  FormBuilder, Validators }
+  <span class="kw">from</span> <span class="str">'@angular/forms'</span>;
+
+<span class="dc">@Component</span>({ imports: [ReactiveFormsModule] })
+<span class="kw">export class</span> <span class="ty">LoginForm</span> {
+  <span class="kw">private</span> fb = inject(FormBuilder);
+
+  form = <span class="kw">this</span>.fb.group({
+    email: [<span class="str">''</span>, [
+      Validators.required,
+      Validators.email
+    ]],
+    password: [<span class="str">''</span>, [
+      Validators.required,
+      Validators.minLength(6)
+    ]]
+  });
+
+  onSubmit() {
+    <span class="kw">if</span> (<span class="kw">this</span>.form.valid) {
+      console.log(<span class="kw">this</span>.form.value);
+    }
+  }
+}</code></pre>
+    </div>
+    <div>
+      <h3>Template</h3>
+      <pre><code>&lt;form [formGroup]=<span class="str">"form"</span>
+      (ngSubmit)=<span class="str">"onSubmit()"</span>&gt;
+
+  &lt;input formControlName=<span class="str">"email"</span>
+         type=<span class="str">"email"</span> /&gt;
+
+  @if (form.get('email')?.hasError('required')
+    &amp;&amp; form.get('email')?.touched) {
+    &lt;p class=<span class="str">"error"</span>&gt;Email required.&lt;/p&gt;
+  }
+  @if (form.get('email')?.hasError('email')
+    &amp;&amp; form.get('email')?.touched) {
+    &lt;p class=<span class="str">"error"</span>&gt;Invalid email.&lt;/p&gt;
+  }
+
+  &lt;input formControlName=<span class="str">"password"</span>
+         type=<span class="str">"password"</span> /&gt;
+
+  &lt;button type=<span class="str">"submit"</span>
+          [disabled]=<span class="str">"form.invalid"</span>&gt;
+    Login
+  &lt;/button&gt;
+&lt;/form&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:0">
+    <div>
+      <h3>Common validators</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Validator</th><th>Error key</th><th>Checks</th></tr></thead>
+        <tbody>
+          <tr><td><code>Validators.required</code></td><td><code>required</code></td><td>Field not empty</td></tr>
+          <tr><td><code>Validators.email</code></td><td><code>email</code></td><td>Valid email format</td></tr>
+          <tr><td><code>Validators.minLength(n)</code></td><td><code>minlength</code></td><td>Min character count</td></tr>
+          <tr><td><code>Validators.maxLength(n)</code></td><td><code>maxlength</code></td><td>Max character count</td></tr>
+          <tr><td><code>Validators.min(n)</code></td><td><code>min</code></td><td>Minimum numeric value</td></tr>
+          <tr><td><code>Validators.pattern(rx)</code></td><td><code>pattern</code></td><td>Regex match</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="callout tip">
+        <strong>Useful form properties</strong>
+        <code>form.valid</code> &nbsp; <code>form.invalid</code> &nbsp; <code>form.value</code><br>
+        <code>form.dirty</code> &nbsp; <code>form.touched</code> &nbsp; <code>form.pristine</code><br><br>
+        On a control:<br>
+        <code>form.get('field')?.errors</code><br>
+        <code>form.get('field')?.hasError('required')</code><br>
+        <code>form.get('field')?.touched</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     13 GUARDS
+──────────────────────────────────────────── -->
+<section class="section" id="s13">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c13)">13</div>
+    <div class="section-meta">
+      <div class="section-title">Route Guards</div>
+      <div class="section-sub">CanActivateFn · CanDeactivateFn · protect routes</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>auth.guard.ts</h3>
+      <pre><code><span class="kw">import</span> { inject } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { CanActivateFn, Router }
+  <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="kw">export const</span> authGuard: CanActivateFn = () =&gt; {
+  <span class="kw">const</span> auth   = inject(AuthService);
+  <span class="kw">const</span> router = inject(Router);
+
+  <span class="kw">return</span> auth.isLoggedIn()
+    ? <span class="kw">true</span>
+    : router.createUrlTree([<span class="str">'/login'</span>]);
+};</code></pre>
+    </div>
+    <div>
+      <h3>Apply in app.routes.ts</h3>
+      <pre><code>{ path: <span class="str">'books'</span>,
+  component: BookList,
+  canActivate: [authGuard] },
+
+{ path: <span class="str">'admin'</span>,
+  component: Admin,
+  canActivate: [authGuard, adminGuard] }</code></pre>
+      <div class="callout info">
+        <strong>Guard return values</strong>
+        <code>true</code> — allow access<br>
+        <code>false</code> — block silently<br>
+        <code>router.createUrlTree(['/login'])</code> — redirect
+      </div>
+    </div>
+  </div>
+
+  <h3>Guard types</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Guard type</th><th>When it runs</th><th>Typical use</th></tr></thead>
+    <tbody>
+      <tr><td><code>CanActivateFn</code></td><td>Before entering a route</td><td>Auth check, role check</td></tr>
+      <tr><td><code>CanDeactivateFn</code></td><td>Before leaving a route</td><td>"Unsaved changes?" dialog</td></tr>
+      <tr><td><code>CanMatchFn</code></td><td>Before matching a route config</td><td>Feature flags</td></tr>
+      <tr><td><code>ResolveFn</code></td><td>Before activating — resolves data</td><td>Pre-load route data</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     14 TESTING
+──────────────────────────────────────────── -->
+<section class="section" id="s14">
+  <div class="section-header">
+    <div class="section-num" style="background:var(--c14)">14</div>
+    <div class="section-meta">
+      <div class="section-title">Testing with TestBed</div>
+      <div class="section-sub">TestBed · ComponentFixture · detectChanges · expect</div>
+    </div>
+  </div>
+
+  <h3>app.spec.ts <span class="badge project">This project</span></h3>
+  <pre><code><span class="kw">import</span> { TestBed } <span class="kw">from</span> <span class="str">'@angular/core/testing'</span>;
+<span class="kw">import</span> { App } <span class="kw">from</span> <span class="str">'./app'</span>;
+
+describe(<span class="str">'App'</span>, () =&gt; {
+  beforeEach(<span class="kw">async</span> () =&gt; {
+    <span class="kw">await</span> TestBed.configureTestingModule({
+      imports: [App],         <span class="cm">// import the standalone component</span>
+    }).compileComponents();
+  });
+
+  it(<span class="str">'should create the app'</span>, () =&gt; {
+    <span class="kw">const</span> fixture = TestBed.createComponent(App);
+    <span class="kw">const</span> app     = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+
+  it(<span class="str">'should render title'</span>, <span class="kw">async</span> () =&gt; {
+    <span class="kw">const</span> fixture  = TestBed.createComponent(App);
+    <span class="kw">await</span> fixture.whenStable();
+    <span class="kw">const</span> compiled = fixture.nativeElement <span class="kw">as</span> HTMLElement;
+    expect(compiled.querySelector(<span class="str">'h1'</span>)?.textContent)
+      .toContain(<span class="str">'Hello, book-app'</span>);
+  });
+});</code></pre>
+
+  <div class="grid-2">
+    <div>
+      <h3>5-step testing pattern</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Code</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>configureTestingModule(&#123; imports: [C] &#125;)</code></td><td>Set up the test module</td></tr>
+          <tr><td>2</td><td><code>TestBed.createComponent(C)</code></td><td>Get a <code>ComponentFixture</code></td></tr>
+          <tr><td>3</td><td><code>fixture.componentInstance</code></td><td>Access the class</td></tr>
+          <tr><td>4</td><td><code>fixture.nativeElement</code></td><td>Access rendered DOM</td></tr>
+          <tr><td>5</td><td><code>fixture.detectChanges()</code></td><td>Trigger change detection</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="callout tip">
+        <strong>Testing a service</strong>
+        Use <code>TestBed.inject(MyService)</code> to get a service instance inside a test.<br><br>
+        Use <code>vi.fn()</code> (Vitest) or <code>jasmine.createSpyObj()</code> to mock dependencies so you test only the unit under test.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────
+     QUICK REFERENCE
+──────────────────────────────────────────── -->
+<section class="section" id="qr" style="background:#f8fafc">
+  <div class="section-header">
+    <div class="section-num" style="background:#475569">★</div>
+    <div class="section-meta">
+      <div class="section-title">Quick Reference</div>
+      <div class="section-sub">All key syntax at a glance</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="qr-block">
+        <h4>Core</h4>
+        <div class="qr-row"><span class="qr-label">Bootstrap</span><span class="qr-code">bootstrapApplication(App, appConfig)</span></div>
+        <div class="qr-row"><span class="qr-label">Standalone component</span><span class="qr-code">@Component({ imports: [...] })</span></div>
+        <div class="qr-row"><span class="qr-label">Signal — create</span><span class="qr-code">count = signal(0)</span></div>
+        <div class="qr-row"><span class="qr-label">Signal — read</span><span class="qr-code">count()  ← call it</span></div>
+        <div class="qr-row"><span class="qr-label">Signal — set</span><span class="qr-code">count.set(5)</span></div>
+        <div class="qr-row"><span class="qr-label">Signal — update</span><span class="qr-code">count.update(v => v + 1)</span></div>
+        <div class="qr-row"><span class="qr-label">Computed</span><span class="qr-code">computed(() => a() + b())</span></div>
+        <div class="qr-row"><span class="qr-label">Inject service</span><span class="qr-code">private svc = inject(MyService)</span></div>
+      </div>
+      <div class="qr-block">
+        <h4>Routing</h4>
+        <div class="qr-row"><span class="qr-label">Navigate link</span><span class="qr-code">routerLink="/path"</span></div>
+        <div class="qr-row"><span class="qr-label">Active class</span><span class="qr-code">routerLinkActive="active"</span></div>
+        <div class="qr-row"><span class="qr-label">Exact match</span><span class="qr-code">[routerLinkActiveOptions]="{exact:true}"</span></div>
+        <div class="qr-row"><span class="qr-label">Outlet</span><span class="qr-code">&lt;router-outlet /&gt;</span></div>
+        <div class="qr-row"><span class="qr-label">Route params</span><span class="qr-code">route.snapshot.paramMap.get('id')</span></div>
+        <div class="qr-row"><span class="qr-label">Navigate</span><span class="qr-code">router.navigate(['/books', id])</span></div>
+        <div class="qr-row"><span class="qr-label">Guard</span><span class="qr-code">canActivate: [authGuard]</span></div>
+        <div class="qr-row"><span class="qr-label">Redirect</span><span class="qr-code">{ path:'', redirectTo:'/home', pathMatch:'full' }</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="qr-block">
+        <h4>Templates &amp; Binding</h4>
+        <div class="qr-row"><span class="qr-label">Interpolation</span><span class="qr-code">{{ value }}</span></div>
+        <div class="qr-row"><span class="qr-label">Property bind</span><span class="qr-code">[src]="imageUrl"</span></div>
+        <div class="qr-row"><span class="qr-label">Event bind</span><span class="qr-code">(click)="handler()"</span></div>
+        <div class="qr-row"><span class="qr-label">Two-way</span><span class="qr-code">[(ngModel)]="field"</span></div>
+        <div class="qr-row"><span class="qr-label">Condition</span><span class="qr-code">@if (cond) { ... } @else { ... }</span></div>
+        <div class="qr-row"><span class="qr-label">Loop</span><span class="qr-code">@for (x of list; track x.id) { }</span></div>
+        <div class="qr-row"><span class="qr-label">Async pipe</span><span class="qr-code">obs$ | async</span></div>
+        <div class="qr-row"><span class="qr-label">@Input</span><span class="qr-code">@Input() name: string = ''</span></div>
+        <div class="qr-row"><span class="qr-label">@Output</span><span class="qr-code">@Output() evt = new EventEmitter&lt;T&gt;()</span></div>
+      </div>
+      <div class="qr-block">
+        <h4>Reactive Forms</h4>
+        <div class="qr-row"><span class="qr-label">Build form</span><span class="qr-code">fb.group({ f: ['', Validators.required] })</span></div>
+        <div class="qr-row"><span class="qr-label">Bind group</span><span class="qr-code">[formGroup]="form"</span></div>
+        <div class="qr-row"><span class="qr-label">Bind field</span><span class="qr-code">formControlName="fieldName"</span></div>
+        <div class="qr-row"><span class="qr-label">Submit</span><span class="qr-code">(ngSubmit)="onSubmit()"</span></div>
+        <div class="qr-row"><span class="qr-label">Check error</span><span class="qr-code">form.get('f')?.hasError('required')</span></div>
+        <div class="qr-row"><span class="qr-label">Disable btn</span><span class="qr-code">[disabled]="form.invalid"</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+</body>
+</html>
