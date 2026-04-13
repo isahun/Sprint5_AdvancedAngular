@@ -1,59 +1,92 @@
-# BookApp
+# Book App - Sprint 5.01: Advanced Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+This repository contains a book-browsing Angular application developed as part of the Sprint 5 curriculum. The focus of this activity was to build a multi-page SPA using Angular Router, signals, services, and modern reactive patterns introduced in Angular 17+.
 
-## Development server
 
-To start a local development server, run:
+## Objectives
 
-```bash
-ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+* Configure client-side routing with Angular Router, including nested routes and a shared Layout.
+* Create a `BooksService` using Angular `signal()` to manage application state.
+* Implement a `BookDetails` page reading route parameters via `input()` and `computed()` instead of `ActivatedRoute`.
+* Organize the project into `pages/`, `services/`, `interfaces/`, and `layout/` directories.
+* Apply Tailwind CSS styles to the application shell and pages.
 
-## Code scaffolding
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Prerequisites
 
-```bash
-ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+To run this project, ensure you have the following versions (or higher) installed:
 
-```bash
-ng generate --help
-```
 
-## Building
+* Node.js: v22.x or higher (v24.x recommended)
+* npm: 11.x or higher
+* Angular CLI: v21.x (`npm install -g @angular/cli`)
 
-To build the project run:
 
-```bash
-ng build
-```
+## Installation
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
+1. Clone the repository and navigate to the project folder:
+   ```bash
+   git clone <repo-url>
+   cd book-app
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
 
-```bash
-ng test
-```
+## Running the Application
 
-## Running end-to-end tests
 
-For end-to-end (e2e) testing, run:
+Start the development server:
 
 ```bash
-ng e2e
+ng serve --open
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+The application will open automatically in your browser at `http://localhost:4200`.
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Core Project Structure
+
+
+```
+src/app/
+├── interfaces/
+│   └── book.interface.ts       # Book data model
+├── services/
+│   └── books-service.ts        # Signal-based data service with mock books
+├── layout/
+│   └── layout.ts / .html       # Shared shell: nav + <router-outlet>
+└── pages/
+    ├── home/                   # Landing page
+    ├── book-list/              # List of all books with route links
+    ├── book-details/           # Detail view for a single book (input + computed)
+    └── not-found/              # 404 fallback page
+```
+
+
+## Key Angular Concepts Practised
+
+
+| Concept | Where |
+|---|---|
+| `signal()` for reactive state | `BooksService` |
+| `input()` for route param binding | `BookDetails` |
+| `computed()` to derive values | `BookDetails.book` |
+| Nested routes with shared Layout | `app.routes.ts` |
+| `withComponentInputBinding()` | `app.config.ts` |
+| `RouterLink` / `RouterLinkActive` | `Layout` |
+| `inject()` instead of constructor DI | `BookDetails`, `NotFound` |
+
+
+---
+
+
+##### Author: Irene V. Sahun — GitHub: [isahun](https://github.com/isahun)
+
+
+##### Created as part of the IT Academy Frontend BootCamp.
