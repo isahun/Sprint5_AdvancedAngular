@@ -1,59 +1,136 @@
-# BookApp
+# Book App - Sprint 5.01 - 5.03: Advanced Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+This repository contains a book-browsing Angular application developed across three activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
 
-## Development server
 
-To start a local development server, run:
+## Activity Overview
+
+
+### 5.01 — Basic Routing and Static Routes
+
+The goal of this activity was to configure Angular Router and set up the basic navigation structure of the application.
+
+**Objectives:**
+* Configure the Angular Router.
+* Create and associate components to routes.
+* Implement basic navigation using `routerLink`.
+
+**Steps performed:**
+* Generated a new Angular project `book-app` with standalone components.
+* Created four page components: `Home`, `BookList`, `BookDetails`, `NotFound`.
+* Configured static routes in `app.routes.ts`: root path, `books`, `books/:bookId`, and the `**` wildcard fallback.
+* Added a navigation bar in `app.html` using `routerLink` and `routerLinkActive` with `routerLinkActiveOptions`.
+* Installed **Tailwind CSS** and applied styles to the navigation bar.
+
+
+### 5.02 — Dynamic Routes and Programmatic Navigation
+
+The goal of this activity was to implement dynamic routes for individual book detail pages and navigate between routes programmatically.
+
+**Objectives:**
+* Define routes with URL parameters.
+* Access route parameters using `ActivatedRoute`.
+* Use `Router` for programmatic navigation.
+
+**Steps performed:**
+* Created a `Book` interface (`id`, `title`, `author`, `category`) in a dedicated file.
+* Created `BooksService` with a `signal`-based array of 3 mock books.
+* Updated `BookList` to inject the service and render book links using `[routerLink]="['/books', book.id]"`.
+* Implemented `BookDetails` to read the `bookId` route parameter, look up the book, and display it — with an `@if` fallback for unknown IDs.
+* Added a "Tornar al llistat" button using `Router.navigate()`.
+* Applied Tailwind styles to the list and detail views.
+* **Refactored** `BookDetails` to read the route parameter via `input()` (Input Signal) and `computed()` instead of `ActivatedRoute` + `OnInit`.
+
+
+### 5.03 — Layout Component and Nested Routes
+
+The goal of this activity was to extract the shared application shell into a dedicated `Layout` component and restructure routes as nested children.
+
+**Objectives:**
+* Create a reusable `Layout` component that holds the nav bar and the `<router-outlet>`.
+* Restructure routing so that all page routes are children of the Layout route.
+* Clean up the root `App` component to act only as an entry point.
+
+**Steps performed:**
+* Generated a `Layout` component containing the navigation bar (`RouterLink`, `RouterLinkActive`) and `<router-outlet>`.
+* Refactored `app.routes.ts` to nest `Home`, `BookList`, and `BookDetails` as children of the Layout route, while keeping `NotFound` at the top level.
+* Stripped the navigation markup from `app.html`, leaving only `<router-outlet />`.
+* Cleaned up `App` imports, removing `RouterLinkWithHref` and `RouterLinkActive`.
+* Added `withComponentInputBinding()` to `provideRouter()` in `app.config.ts` to enable automatic route-param-to-input binding.
+* Updated `NotFound` with a `goBack()` method using `Router.navigate()` and applied Tailwind styles.
+
+
+## Prerequisites
+
+
+* Node.js: v22.x or higher (v24.x recommended)
+* npm: 11.x or higher
+* Angular CLI: v21.x — `npm install -g @angular/cli`
+
+
+## Installation
+
 
 ```bash
-ng serve
+git clone <repo-url>
+cd book-app
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+## Running the Application
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
 ```bash
-ng generate component component-name
+ng serve --open
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Opens automatically at `http://localhost:4200`.
 
-```bash
-ng generate --help
+
+## Project Structure
+
+
+```
+src/app/
+├── interfaces/
+│   └── book.interface.ts         # Book data model
+├── services/
+│   └── books-service.ts          # Signal-based data service with mock books
+├── layout/
+│   └── layout.ts / .html / .css  # Shared shell: nav bar + <router-outlet>
+└── pages/
+    ├── home/                     # Landing page
+    ├── book-list/                # List of all books with dynamic route links
+    ├── book-details/             # Detail view (input() + computed() for route param)
+    └── not-found/                # 404 fallback with programmatic back navigation
 ```
 
-## Building
 
-To build the project run:
+## Key Angular Concepts Practised
 
-```bash
-ng build
-```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+| Concept | Activity | Where |
+|---|---|---|
+| `routerLink` / `routerLinkActive` | 5.01 | `app.html` → `Layout` |
+| Wildcard and redirect routes | 5.01 | `app.routes.ts` |
+| `BooksService` with `signal()` | 5.02 | `books-service.ts` |
+| Dynamic route param `/:bookId` | 5.02 | `app.routes.ts` |
+| `ActivatedRoute` param reading | 5.02 | `BookDetails` (initial) |
+| `Router.navigate()` | 5.02 | `BookDetails`, `NotFound` |
+| `@if` conditional rendering | 5.02 | `book-details.html` |
+| `input()` for route param binding | 5.02 refactor | `BookDetails` |
+| `computed()` to derive state | 5.02 refactor | `BookDetails.book` |
+| `inject()` instead of constructor DI | 5.02–5.03 | `BookDetails`, `NotFound` |
+| Nested routes with shared Layout | 5.03 | `app.routes.ts` |
+| `withComponentInputBinding()` | 5.03 | `app.config.ts` |
+| Tailwind CSS | 5.01–5.03 | Throughout |
 
-## Running unit tests
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+---
 
-```bash
-ng test
-```
 
-## Running end-to-end tests
+##### Author: Irene V. Sahun — GitHub: [isahun](https://github.com/isahun)
 
-For end-to-end (e2e) testing, run:
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+##### Created as part of the IT Academy Frontend BootCamp.
