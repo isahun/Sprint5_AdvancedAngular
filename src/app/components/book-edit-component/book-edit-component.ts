@@ -1,4 +1,4 @@
-import { Component, input, output, signal, effect } from '@angular/core';
+import { Component, input, output, signal, effect, ChangeDetectionStrategy  } from '@angular/core';
 import { Book } from '../../interfaces/book.interface';
 
 @Component({
@@ -6,6 +6,7 @@ import { Book } from '../../interfaces/book.interface';
   imports: [],
   templateUrl: './book-edit-component.html',
   styleUrl: './book-edit-component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookEditComponent {
   constructor() {

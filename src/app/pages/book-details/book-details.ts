@@ -1,4 +1,4 @@
-import { Component, inject, input, computed, output } from '@angular/core';
+import { Component, inject, input, computed, output, ChangeDetectionStrategy  } from '@angular/core';
 import { BooksService } from '../../services/books-service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BookEditComponent } from '../../components/book-edit-component/book-edit-component';
@@ -9,6 +9,7 @@ import { Book } from '../../interfaces/book.interface';
   imports: [BookEditComponent],
   templateUrl: './book-details.html',
   styleUrl: './book-details.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookDetails {
   service = inject(BooksService);
