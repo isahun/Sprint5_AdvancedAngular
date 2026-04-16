@@ -1,8 +1,29 @@
 {
   "books": [
-    { "id": "1", "title": "The lord of the Rings", "author": "J.R.R. Tolkien", "category": "Epic" },
-    { "id": "2", "title": "Metafísica de los tubos", "author": "Amélie Nothomb", "category": "Modern fiction" },
-    { "id": "3", "title": "Poesía completa", "author":"Alejandra Pizarnik", "category": "Poetry" },
-    { "id": "4", "title": "Por el camino de Swann", "author":"Marcel Proust", "category": "Fiction" }
-  ]
+    {
+      "id": "1",
+      "title": "The lord of the Rings",
+      "author": "J.R.R. Tolkien",
+      "category": "Epic"
+    },
+    {
+      "id": "2",
+      "title": "Metafísica de los tubos",
+      "author": "Amélie Nothomb",
+      "category": "Modern fiction"
+    },
+    {
+      "id": "4",
+      "title": "Por el camino de Swann",
+      "author": "Marcel Proustt",
+      "category": "Fiction"
+    },
+    {
+      "title": "Apegos Feroces",
+      "author": "Vivian Gornik",
+      "category": "Biografia",
+      "id": "dwrA6R8sPeM"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
