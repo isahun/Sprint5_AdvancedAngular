@@ -98,6 +98,25 @@ The goal of this activity was to extend the application with full create, update
 * Updated `BookList` as the root component managing state: handles all CRUD responses and updates the local books signal accordingly.
 
 
+## Testing
+
+The project uses **Vitest** with Angular's `TestBed`. Tests are written and ready to run — no additional setup required.
+
+```bash
+ng test
+```
+
+The main test suite is `BookApiService` ([src/app/services/book-api.service.spec.ts](src/app/services/book-api.service.spec.ts)), which covers all HTTP methods using `HttpTestingController`:
+
+- `GET /books` — retrieves all books
+- `POST /books` — adds a new book (with `Omit<Book, 'id'>` payload)
+- `PUT /books/:id` — updates an existing book
+- `DELETE /books/:id` — deletes a book
+- Error handling — graceful response to HTTP errors (e.g. 404)
+
+The remaining spec files (components and services) contain the default Angular scaffold tests and pass as-is.
+
+
 ## Branch Reference
 
 | Branch | Description |
