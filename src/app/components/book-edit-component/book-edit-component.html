@@ -1,10 +1,29 @@
+<!--
+  AQUEST COMPONENT REP:
+    - [currentBook] des de BookDetails → el llibre a editar
+
+  AQUEST COMPONENT EMET:
+    - (bookSaved) cap a BookDetails → el llibre amb les dades modificades
+
+  FLUX: usuari edita camps → clica "Guardar" → save() → bookSaved.emit(llibre) → BookDetails ho recull
+-->
+
 <section class="flex flex-col gap-3 items-center mt-4 bg-orange-300 rounded-3xl m-30 p-5">
   <h1 class="text-xl">Edita els detalls del llibre</h1>
+
+  <!--
+    [value]="title()" → binding unidireccional: mostra el valor del signal al camp
+    (input)="title.set(...)" → escolta cada tecla i actualitza el signal
+    $any($event.target).value → manera de llegir el valor de l'input sense errors de TypeScript
+    Junts fan el que ngModel faria automàticament, però amb signals.
+  -->
   <input class="border border-amber-700 rounded-xl p-2 text-sm font-light font-serif bg-amber-50 text-center"
     [value]="title()" (input)="title.set($any($event.target).value)" placeholder="Títol" />
   <input class="border border-amber-700 rounded-xl p-2 text-sm font-light font-serif bg-amber-50 text-center"
     [value]="author()" (input)="author.set($any($event.target).value)" placeholder="Autor" />
   <input class="border border-amber-700 rounded-xl p-2 text-sm font-light font-serif bg-amber-50 text-center"
     [value]="category()" (input)="category.set($any($event.target).value)" placeholder="Categoria" />
+
+  <!-- (click) escolta l'event de clic natiu del navegador i crida el mètode save() del .ts -->
   <button class="save-btn" (click)="save()">Guardar</button>
 </section>

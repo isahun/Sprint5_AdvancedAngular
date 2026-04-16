@@ -1,10 +1,24 @@
+<!--
+  AQUEST COMPONENT REP (inputs des de BookList):
+    - [bookId] → l'id del llibre seleccionat
+
+  AQUEST COMPONENT EMET (outputs cap a BookList):
+    - (bookDeleted) → l'id del llibre a eliminar
+    - (bookUpdated) → el llibre amb les dades actualitzades
+    - (goBack)      → notifica que l'usuari vol tornar al llistat (sense dades)
+-->
+
 <section class="details-container flex flex-col gap-10">
+
+  <!-- @if és la sintaxi moderna d'Angular (v17+) per fer renderitzat condicional -->
   @if (book()) {
   <section class="flex flex-col gap-5 justify-center text-center bg-amber-50 m-auto p-10 rounded-3xl shadow">
     <h1 class="text-2xl">Detalls del llibre</h1>
 
     <ul>
       <li class="flex flex-col gap-5">
+        <!-- {{ }} és interpolació: mostra el valor d'una expressió com a text -->
+        <!-- ?. és l'operador optional chaining: evita errors si book() és undefined -->
         <p class="book-details">Títol: {{ book()?.title }}</p>
         <p class="book-details">Autor: {{ book()?.author }}</p>
         <p class="book-details">Categoria: {{ book()?.category }}</p>
@@ -19,12 +33,21 @@
   </section>
   }
 
+  <!-- (click) crida deleteBook() al .ts, que emet l'id cap a BookList via output bookDeleted -->
   <button type="button" (click)="deleteBook()" class="back-btn">
     Eliminar
   </button>
+
+  <!-- goBack és un output<void>: no envia dades, simplement avisa al pare -->
   <button type="button" (click)="goBack.emit()" class="back-btn">
     Torna al llistat
   </button>
 
+  <!--
+    Ús del component fill BookEditComponent:
+      [currentBook]="book()"          → li passem el llibre actual com a input (dades cap avall)
+      (bookSaved)="onBookSaved($event)"→ escoltem el seu output; $event és el Book que ha emès
+    onBookSaved() al .ts agafa el $event i el remet cap amunt a BookList via bookUpdated.emit()
+  -->
   <app-book-edit-component [currentBook]="book()" (bookSaved)="onBookSaved($event)"></app-book-edit-component>
 </section>

@@ -1,10 +1,46 @@
+<!--
+  BOOKL LIST és el component ARREL d'aquesta funcionalitat.
+  Gestiona l'estat global: quins llibres hi ha i quin està seleccionat.
+  És l'únic que crida el servei per a totes les operacions CRUD.
+
+  REGLA CLAU: les dades baixen per [inputs], els esdeveniments pugen per (outputs).
+    BookList → [bookId] → BookDetails → [currentBook] → BookEditComponent
+    BookList ← (bookDeleted/bookUpdated/goBack) ← BookDetails ← (bookSaved) ← BookEditComponent
+-->
+
 <section class="list-container m-auto flex flex-col gap-4 p-10 text-center bg-amber-50">
   <h1 class="text-3xl font-semibold mb-5">Llista de llibres</h1>
+
+  <!--
+    Mostrem BookDetails només si hi ha un llibre seleccionat.
+    selectedBookId() és un signal: quan canvia, Angular re-renderitza automàticament.
+
+    [bookId]="selectedBookId()!"
+      → passem l'id al component fill com a input
+      → la ! indica a TypeScript que sabem que no és null en aquest punt
+
+    (bookUpdated)="updateBook($event)"
+      → quan BookDetails emet bookUpdated, cridem updateBook() amb el llibre rebut
+    (bookDeleted)="deleteBook($event)"
+      → quan BookDetails emet bookDeleted, cridem deleteBook() amb l'id rebut
+    (goBack)="selectedBookId.set(null)"
+      → quan BookDetails emet goBack, deseleccionem el llibre i tornem a la llista
+  -->
   @if (selectedBookId()) {
-  <app-book-details [bookId]="selectedBookId()!" (bookUpdated)="updateBook($event)" (bookDeleted)="deleteBook($event)"
-    (goBack)="selectedBookId.set(null)"></app-book-details>
+  <app-book-details
+    [bookId]="selectedBookId()!"
+    (bookUpdated)="updateBook($event)"
+    (bookDeleted)="deleteBook($event)"
+    (goBack)="selectedBookId.set(null)">
+  </app-book-details>
 
   } @else {
+
+  <!--
+    @for és la sintaxi moderna per iterar (substitueix *ngFor).
+    track book.id ajuda Angular a identificar cada element per optimitzar el re-renderitzat.
+    (click) en un <li> escolta el clic de l'usuari i crida selectBook() amb l'id del llibre.
+  -->
   <ul class="flex flex-col gap-4 text-2xl font-light">
     @for (book of books(); track book.id) {
     <li (click)="selectBook(book.id)" style="cursor:pointer">
@@ -12,8 +48,9 @@
     </li>
     }
   </ul>
+
   <button type="button" (click)="addBook()" class="back-btn">
     Afegeix un llibre
   </button>
-}
+  }
 </section>
