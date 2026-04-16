@@ -1,4 +1,4 @@
-import { Component, input, output, signal, effect } from '@angular/core';
+import { Component, input, output, signal, effect, ChangeDetectionStrategy } from '@angular/core';
 import { Book } from '../../interfaces/book.interface';
 
 @Component({
@@ -6,6 +6,9 @@ import { Book } from '../../interfaces/book.interface';
   imports: [],
   templateUrl: './book-edit-component.html',
   styleUrl: './book-edit-component.css',
+  // OnPush és compatible amb Signals: Angular detecta canvis als signals automàticament
+  // i re-renderitza només quan cal, sense necessitat de comprovació constant.
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookEditComponent {
   // input<Book>() sense .required vol dir que el valor és opcional (pot ser undefined).

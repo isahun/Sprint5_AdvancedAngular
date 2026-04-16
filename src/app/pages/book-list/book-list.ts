@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { BooksService } from '../../services/books-service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, switchMap } from 'rxjs';
@@ -11,6 +11,9 @@ import { Book } from '../../interfaces/book.interface';
   imports: [BookDetails],
   templateUrl: './book-list.html',
   styleUrl: './book-list.css',
+  // OnPush: BookList gestiona tot l'estat via signals (books, selectedBookId, error),
+  // de manera que Angular sap exactament quan cal re-renderitzar.
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookList {
   private service = inject(BooksService);
@@ -56,8 +59,10 @@ export class BookList {
   deleteBook(id: string) {
     this.service.deleteBook(id).subscribe({
       next: () => {
-        // Deseleccionem el llibre eliminat per tornar a mostrar la llista.
-        this.selectedBookId.set(null);
+        // update() rep el valor actual i retorna el nou valor.
+        // Aquí només netegem selectedBookId si el llibre eliminat era el seleccionat,
+        // evitant un reset innecessari quan s'elimina un llibre diferent al seleccionat.
+        this.selectedBookId.update(current => (current === id ? null : current));
         this.refresh$.next();
       },
     });
