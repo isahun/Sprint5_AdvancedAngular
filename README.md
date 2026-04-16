@@ -1,4 +1,4 @@
-# Book App - Sprint 5.01 - 5.05: Advanced Angular
+# Book App - Sprint 5.01 - 5.07: Advanced Angular
 
 This repository contains a book-browsing Angular application developed across four activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
 
@@ -98,6 +98,36 @@ The goal of this activity was to extend the application with full create, update
 * Updated `BookList` as the root component managing state: handles all CRUD responses and updates the local books signal accordingly.
 
 
+### 5.06 — HTTP Service Testing with Vitest
+
+The goal of this activity was to write unit tests for the HTTP service layer using Angular's `HttpTestingController`.
+
+**Objectives:**
+* Configure and use `HttpTestingController` to intercept and assert HTTP requests.
+* Test all CRUD methods of the service.
+* Fix broken default spec files from the Angular scaffold.
+
+**Steps performed:**
+* Created `book-api.service.spec.ts` with full test coverage for `BookApiService`: GET, POST, PUT, DELETE, and error handling.
+* Fixed broken default spec files: removed the failing `app.spec.ts`, updated `layout.spec.ts` and `book-details.spec.ts` to match the current component structure.
+
+
+### 5.07 — Local Component State Management with Signals
+
+The goal of this activity was to refactor existing components to use Angular Signals for local state management, improving reactivity and adopting best practices for change detection.
+
+**Objectives:**
+* Convert local state variables to `signal()`.
+* Update signals using `set()` and `update()`.
+* Use `computed()` for derived state.
+* Apply `ChangeDetectionStrategy.OnPush` to all components.
+
+**Steps performed:**
+* Added `changeDetection: ChangeDetectionStrategy.OnPush` to all components: `Home`, `NotFound`, `Layout`, `BookDetails`, `BookList`, and `BookEditComponent`.
+* Refactored `deleteBook()` in `BookList` to use `signal.update()` instead of `set(null)` — only clears `selectedBookId` if it matches the deleted book's ID, avoiding unnecessary state resets.
+* Fixed an unused variable warning in `catchError` by renaming `err` to `_err`.
+
+
 ## Testing
 
 The project uses **Vitest** with Angular's `TestBed`. Tests are written and ready to run — no additional setup required.
@@ -121,10 +151,11 @@ The remaining spec files (components and services) contain the default Angular s
 
 | Branch | Description |
 |---|---|
-| `main` | Final state — activities 5.04 to 5.05 including HTTP |
+| `main` | Final state — activities 5.04 to 5.07 including HTTP and Signals |
 | `feature/hardcodedData` | State after 5.01–5.03, before HTTP (hardcoded mock data) |
 | `hardcodedCommented` | Same as `feature/hardcodedData` with explanatory comments in Catalan |
 | `crudCommented` | Extended version with full CRUD operations, with comments |
+| `feature/signals-local-state` | Signals refactor: `OnPush` on all components, `update()` in `deleteBook` |
 
 
 ## Prerequisites
@@ -205,7 +236,10 @@ src/app/
 | `input()` / `output()` component communication | 5.05 | `BookEditComponent` ↔ `BookDetails` ↔ `BookList` |
 | `effect()` to sync signals with side effects | 5.05 | `BookEditComponent` |
 | `Omit<T, K>` TypeScript utility type | 5.05 | `BooksService.addBook()` |
-| Tailwind CSS | 5.01–5.05 | Throughout |
+| `HttpTestingController` for HTTP unit tests | 5.06 | `book-api.service.spec.ts` |
+| `ChangeDetectionStrategy.OnPush` | 5.07 | All components |
+| `signal.update()` for conditional state update | 5.07 | `BookList.deleteBook()` |
+| Tailwind CSS | 5.01–5.07 | Throughout |
 
 
 ---
