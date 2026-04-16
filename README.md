@@ -1,4 +1,4 @@
-# Book App - Sprint 5.01 - 5.04: Advanced Angular
+# Book App - Sprint 5.01 - 5.05: Advanced Angular
 
 This repository contains a book-browsing Angular application developed across four activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
 
@@ -80,6 +80,53 @@ The goal of this activity was to replace the hardcoded mock data with real HTTP 
 * Updated `BookDetails` to also use `toSignal()` and derive the displayed book via `computed(() => this.books().find(...))`.
 
 
+### 5.05 — Full CRUD with HttpClient
+
+The goal of this activity was to extend the application with full create, update, and delete operations using HTTP requests, and to implement a component communication pattern with inputs and outputs.
+
+**Objectives:**
+* Implement `POST`, `PUT`, and `DELETE` requests in `BooksService`.
+* Create a child component (`BookEditComponent`) for editing book data.
+* Use `input()` and `output()` to communicate between parent and child components.
+* Use `effect()` to synchronise form fields with incoming data.
+
+**Steps performed:**
+* Extended `BooksService` with `addBook()` (POST), `updateBook()` (PUT), `deleteBook()` (DELETE), and `getBookById()` (GET by id).
+* Created `BookEditComponent` with local signals for form fields (`title`, `author`, `category`), an `input()` for the current book, and a `bookSaved` output.
+* Used `effect()` in `BookEditComponent` to initialise form fields whenever the parent passes a new book.
+* Updated `BookDetails` to receive `bookId` and emit `bookDeleted`, `bookUpdated`, and `goBack` outputs — delegating all service calls to the parent.
+* Updated `BookList` as the root component managing state: handles all CRUD responses and updates the local books signal accordingly.
+
+
+## Testing
+
+The project uses **Vitest** with Angular's `TestBed`. Tests are written and ready to run — no additional setup required.
+
+```bash
+ng test
+```
+
+The main test suite is `BookApiService` ([src/app/services/book-api.service.spec.ts](src/app/services/book-api.service.spec.ts)), which covers all HTTP methods using `HttpTestingController`:
+
+- `GET /books` — retrieves all books
+- `POST /books` — adds a new book (with `Omit<Book, 'id'>` payload)
+- `PUT /books/:id` — updates an existing book
+- `DELETE /books/:id` — deletes a book
+- Error handling — graceful response to HTTP errors (e.g. 404)
+
+The remaining spec files (components and services) contain the default Angular scaffold tests and pass as-is.
+
+
+## Branch Reference
+
+| Branch | Description |
+|---|---|
+| `main` | Final state — activities 5.04 to 5.05 including HTTP |
+| `feature/hardcodedData` | State after 5.01–5.03, before HTTP (hardcoded mock data) |
+| `hardcodedCommented` | Same as `feature/hardcodedData` with explanatory comments in Catalan |
+| `crudCommented` | Extended version with full CRUD operations, with comments |
+
+
 ## Prerequisites
 
 
@@ -154,7 +201,11 @@ src/app/
 | `catchError` / `handleError` | 5.04 | `BooksService` |
 | `environment.ts` for API config | 5.04 | `environments/` |
 | `toSignal()` from Observable | 5.04 | `BookList`, `BookDetails` |
-| Tailwind CSS | 5.01–5.04 | Throughout |
+| `HttpClient.post/put/delete` | 5.05 | `BooksService` |
+| `input()` / `output()` component communication | 5.05 | `BookEditComponent` ↔ `BookDetails` ↔ `BookList` |
+| `effect()` to sync signals with side effects | 5.05 | `BookEditComponent` |
+| `Omit<T, K>` TypeScript utility type | 5.05 | `BooksService.addBook()` |
+| Tailwind CSS | 5.01–5.05 | Throughout |
 
 
 ---
