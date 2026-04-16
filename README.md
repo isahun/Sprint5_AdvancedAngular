@@ -1,6 +1,6 @@
-# Book App - Sprint 5.01 - 5.03: Advanced Angular
+# Book App - Sprint 5.01 - 5.04: Advanced Angular
 
-This repository contains a book-browsing Angular application developed across three activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
+This repository contains a book-browsing Angular application developed across four activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
 
 
 ## Activity Overview
@@ -60,6 +60,26 @@ The goal of this activity was to extract the shared application shell into a ded
 * Updated `NotFound` with a `goBack()` method using `Router.navigate()` and applied Tailwind styles.
 
 
+### 5.04 — HTTP Data Fetching with HttpClient
+
+The goal of this activity was to replace the hardcoded mock data with real HTTP requests to a simulated REST API, and learn to handle asynchronous data reactively using Observables and Signals.
+
+**Objectives:**
+* Configure `HttpClient` in the Angular application.
+* Implement a `GET` request in `BooksService` to fetch books from an API.
+* Handle HTTP errors with `catchError` and a dedicated `handleError` method.
+* Convert the returned Observable into a Signal using `toSignal()` for use in templates.
+
+**Steps performed:**
+* Installed `json-server` and created `db.json` at the project root with 4 mock books.
+* Added `provideHttpClient()` to `app.config.ts`.
+* Created `src/environments/environment.ts` with the `apiUrl` (`http://localhost:3000/`) to avoid hardcoding URLs in the service.
+* Rewrote `BooksService`: removed the hardcoded `signal`-based array, injected `HttpClient` via `inject()`, and implemented `getBooks()` returning an `Observable<Book[]>` with `.pipe(catchError(...))`.
+* Implemented `handleError()` to distinguish client-side network errors from server-side HTTP errors.
+* Updated `BookList` to call `toSignal(this.service.getBooks(), { initialValue: [] })` and consume the resulting signal in the template.
+* Updated `BookDetails` to also use `toSignal()` and derive the displayed book via `computed(() => this.books().find(...))`.
+
+
 ## Prerequisites
 
 
@@ -80,12 +100,15 @@ npm install
 
 ## Running the Application
 
+This project requires two servers running in parallel: the Angular dev server and the json-server mock API.
 
 ```bash
+# Terminal 1 — Mock REST API (http://localhost:3000)
+npx json-server db.json
+
+# Terminal 2 — Angular dev server (http://localhost:4200)
 ng serve --open
 ```
-
-Opens automatically at `http://localhost:4200`.
 
 
 ## Project Structure
@@ -95,8 +118,10 @@ Opens automatically at `http://localhost:4200`.
 src/app/
 ├── interfaces/
 │   └── book.interface.ts         # Book data model
+├── environments/
+│   └── environment.ts            # API URL config (apiUrl)
 ├── services/
-│   └── books-service.ts          # Signal-based data service with mock books
+│   └── books-service.ts          # HTTP service: GET /books with error handling
 ├── layout/
 │   └── layout.ts / .html / .css  # Shared shell: nav bar + <router-outlet>
 └── pages/
@@ -124,7 +149,12 @@ src/app/
 | `inject()` instead of constructor DI | 5.02–5.03 | `BookDetails`, `NotFound` |
 | Nested routes with shared Layout | 5.03 | `app.routes.ts` |
 | `withComponentInputBinding()` | 5.03 | `app.config.ts` |
-| Tailwind CSS | 5.01–5.03 | Throughout |
+| `provideHttpClient()` | 5.04 | `app.config.ts` |
+| `HttpClient.get<T>()` | 5.04 | `BooksService` |
+| `catchError` / `handleError` | 5.04 | `BooksService` |
+| `environment.ts` for API config | 5.04 | `environments/` |
+| `toSignal()` from Observable | 5.04 | `BookList`, `BookDetails` |
+| Tailwind CSS | 5.01–5.04 | Throughout |
 
 
 ---
