@@ -1,45 +1,31 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Book } from '../interfaces/book.interface';
-import { environment } from '../../environments/environment';
+import { BookApiService } from './book-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BooksService {
-  private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl + '/books';
+  private bookApiService = inject(BookApiService);
 
   getBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(this.apiUrl).pipe(catchError(this.handleError));
-  }
-
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = "S'ha produït un error desconegut!";
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      errorMessage = `Codi d'error del servidor: ${error.status}, missatge: ${error.message}`;
-    }
-    console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
+    return this.bookApiService.getBooks();
   }
 
   getBookById(id: string): Observable<Book> {
-    return this.http.get<Book>(`${this.apiUrl}/${id}`);
+    return this.bookApiService.getBookById(id);
   }
 
   addBook(b: Omit<Book, 'id'>): Observable<Book> {
-    return this.http.post<Book>(this.apiUrl, b);
+    return this.bookApiService.addBook(b);
   }
 
   updateBook(b: Book): Observable<Book> {
-    return this.http.put<Book>(`${this.apiUrl}/${b.id}`, b);
+    return this.bookApiService.updateBook(b);
   }
 
   deleteBook(id: string): Observable<unknown> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.bookApiService.deleteBook(id);
   }
 }
