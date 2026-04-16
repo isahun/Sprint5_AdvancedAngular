@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { BooksService } from '../../services/books-service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, of, switchMap } from 'rxjs';
 import { BookDetails } from '../book-details/book-details';
 import { Book } from '../../interfaces/book.interface';
 
@@ -15,9 +15,18 @@ export class BookList {
   private service = inject(BooksService);
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  books = toSignal(this.refresh$.pipe(switchMap(() => this.service.getBooks())), {
-    initialValue: [],
+  error = signal<string | null>(null);
+
+  books = toSignal(this.refresh$.pipe(switchMap(() => this.service.getBooks().pipe(
+      catchError((err) => {
+        this.error.set('No s\'han pogut carregar els llibres.');
+        return of([] as Book[]);
+      })
+    ))
+  ), {
+    initialValue: [] as Book[],
   });
+
   selectedBookId = signal<string | null>(null);
 
   selectBook(id: string) {

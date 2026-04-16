@@ -18,7 +18,7 @@ export class BookDetails {
   bookUpdated = output<Book>();
   goBack = output<void>();
 
-  books = toSignal(this.service.getBooks(), { initialValue: [] });
+  books = toSignal(this.service.getBooks(), { initialValue: [] as Book[] });
 
   book = computed(() => this.books().find((b) => b.id === this.bookId()));
 

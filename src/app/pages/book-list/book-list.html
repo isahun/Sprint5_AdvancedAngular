@@ -1,5 +1,9 @@
 <section class="list-container m-auto flex flex-col gap-4 p-10 text-center bg-amber-50">
   <h1 class="text-3xl font-semibold mb-5">Llista de llibres</h1>
+  @if (error()) {
+  <p class="text-red-500">{{ error() }}</p>
+  }
+
   @if (selectedBookId()) {
   <app-book-details [bookId]="selectedBookId()!" (bookUpdated)="updateBook($event)" (bookDeleted)="deleteBook($event)"
     (goBack)="selectedBookId.set(null)"></app-book-details>
@@ -15,5 +19,5 @@
   <button type="button" (click)="addBook()" class="back-btn">
     Afegeix un llibre
   </button>
-}
+  }
 </section>
