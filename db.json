@@ -19,10 +19,10 @@
       "category": "Fiction"
     },
     {
+      "id": "dwrA6R8sPeM",
       "title": "Apegos Feroces",
       "author": "Vivian Gornik",
-      "category": "Biografia",
-      "id": "dwrA6R8sPeM"
+      "category": "Biografia"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
