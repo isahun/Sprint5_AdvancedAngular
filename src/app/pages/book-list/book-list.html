@@ -3,7 +3,7 @@
 
   <ul class="flex flex-col gap-4 text-2xl font-light">
 
-    @for (book of service.books(); track book.id) {
+    @for (book of books(); track book.id) {
 
     <li>
       <a [routerLink]="['/books', book.id]"><span> {{ book.title }}</span></a>

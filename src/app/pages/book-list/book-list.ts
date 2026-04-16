@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BooksService } from '../../services/books-service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-book-list',
@@ -10,5 +11,6 @@ import { BooksService } from '../../services/books-service';
 })
 export class BookList {
 
-  service = inject(BooksService);
+  private service = inject(BooksService);
+  books = toSignal(this.service.getBooks(), { initialValue: [] });
 }
