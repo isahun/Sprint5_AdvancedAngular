@@ -26,4 +26,20 @@ export class BooksService {
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
+
+  getBookById(id: string): Observable<Book> {
+    return this.http.get<Book>(`${this.apiUrl}/${id}`);
+  }
+
+  addBook(b: Omit<Book, 'id'>): Observable<Book> {
+    return this.http.post<Book>(this.apiUrl, b);
+  }
+
+  updateBook(b: Book): Observable<Book> {
+    return this.http.put<Book>(`${this.apiUrl}/${b.id}`, b);
+  }
+
+  deleteBook(id: string): Observable<unknown> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

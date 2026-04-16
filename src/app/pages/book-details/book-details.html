@@ -1,26 +1,30 @@
-
 <section class="details-container flex flex-col gap-10">
-@if (book()) {
-<section class="flex flex-col gap-5 justify-center text-center bg-amber-50 m-auto p-10 rounded-3xl shadow">
-  <h1 class="text-2xl ">Detalls del llibre</h1>
+  @if (book()) {
+  <section class="flex flex-col gap-5 justify-center text-center bg-amber-50 m-auto p-10 rounded-3xl shadow">
+    <h1 class="text-2xl">Detalls del llibre</h1>
 
-  <ul>
-    <li class="flex flex-col gap-5">
-      <p class="book-details">Títol: {{ book()?.title }}</p>
-      <p class="book-details">Autor: {{ book()?.author }}</p>
-      <p class="book-details">Categoria: {{ book()?.category }}</p>
-    </li>
-  </ul>
+    <ul>
+      <li class="flex flex-col gap-5">
+        <p class="book-details">Títol: {{ book()?.title }}</p>
+        <p class="book-details">Autor: {{ book()?.author }}</p>
+        <p class="book-details">Categoria: {{ book()?.category }}</p>
+      </li>
+    </ul>
 
+  </section>
 
-</section>
+  } @else {
+  <section class="flex flex-col gap-5 justify-center text-center">
+    <p>No s'ha trobat cap llibre amb aquest identificador.</p>
+  </section>
+  }
 
-} @else {
-<section class="flex flex-col gap-5 justify-center text-center">
-  <p>No s'ha trobat cap llibre amb aquest identificador.</p>
-</section>
-}
-  <button type="button" (click)="goBack()" class="back-btn">
+  <button type="button" (click)="deleteBook()" class="back-btn">
+    Eliminar
+  </button>
+  <button type="button" (click)="goBack.emit()" class="back-btn">
     Torna al llistat
   </button>
+
+  <app-book-edit-component [currentBook]="book()" (bookSaved)="onBookSaved($event)"></app-book-edit-component>
 </section>

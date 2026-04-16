@@ -1,14 +1,19 @@
 <section class="list-container m-auto flex flex-col gap-4 p-10 text-center bg-amber-50">
   <h1 class="text-3xl font-semibold mb-5">Llista de llibres</h1>
+  @if (selectedBookId()) {
+  <app-book-details [bookId]="selectedBookId()!" (bookUpdated)="updateBook($event)" (bookDeleted)="deleteBook($event)"
+    (goBack)="selectedBookId.set(null)"></app-book-details>
 
+  } @else {
   <ul class="flex flex-col gap-4 text-2xl font-light">
-
     @for (book of books(); track book.id) {
-
-    <li>
-      <a [routerLink]="['/books', book.id]"><span> {{ book.title }}</span></a>
+    <li (click)="selectBook(book.id)" style="cursor:pointer">
+      <span> {{ book.title }}</span>
     </li>
     }
-
   </ul>
+  <button type="button" (click)="addBook()" class="back-btn">
+    Afegeix un llibre
+  </button>
+}
 </section>
