@@ -13,10 +13,6 @@ export class BooksService {
   // Angular watches: whenever its value changes, any template or computed()
   // that reads it will automatically update.
   // You read a signal by calling it like a function: books()
-  // signal() is Angular's reactive primitive. Think of it as a variable that
-  // Angular watches: whenever its value changes, any template or computed()
-  // that reads it will automatically update.
-  // You read a signal by calling it like a function: books()
   books = signal<Book[]>([
     { id: '1', title: 'The lord of the Rings', author: 'J.R.R. Tolkien', category: 'Epic' },
     { id: '2', title: 'Metafísica de los tubos', author: 'Amélie Nothomb', category: 'Other'},
