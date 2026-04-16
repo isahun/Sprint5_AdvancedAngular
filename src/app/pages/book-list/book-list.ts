@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy  } from '@angular/core';
 import { BooksService } from '../../services/books-service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, of, switchMap } from 'rxjs';
@@ -10,6 +10,7 @@ import { Book } from '../../interfaces/book.interface';
   imports: [BookDetails],
   templateUrl: './book-list.html',
   styleUrl: './book-list.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookList {
   private service = inject(BooksService);
@@ -18,7 +19,7 @@ export class BookList {
   error = signal<string | null>(null);
 
   books = toSignal(this.refresh$.pipe(switchMap(() => this.service.getBooks().pipe(
-      catchError((err) => {
+      catchError((_err) => {
         this.error.set('No s\'han pogut carregar els llibres.');
         return of([] as Book[]);
       })
@@ -56,7 +57,7 @@ export class BookList {
   deleteBook(id: string) {
     this.service.deleteBook(id).subscribe({
       next: () => {
-        this.selectedBookId.set(null);
+        this.selectedBookId.update(current => current === id ? null : current);
         this.refresh$.next();
       },
     });

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy  } from '@angular/core';
 import { Router } from '@angular/router';
 
 
@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
   imports: [],
   templateUrl: './not-found.html',
   styleUrl: './not-found.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotFound {
   router = inject(Router);
