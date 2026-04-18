@@ -1,7 +1,5 @@
-import { Component, inject, signal, ChangeDetectionStrategy  } from '@angular/core';
-import { BooksService } from '../../services/books-service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, catchError, of, switchMap } from 'rxjs';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { BookService } from '../../services/book.service';
 import { BookDetails } from '../book-details/book-details';
 import { Book } from '../../interfaces/book.interface';
 
@@ -10,56 +8,40 @@ import { Book } from '../../interfaces/book.interface';
   imports: [BookDetails],
   templateUrl: './book-list.html',
   styleUrl: './book-list.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookList {
-  private service = inject(BooksService);
-  private refresh$ = new BehaviorSubject<void>(undefined);
-
-  error = signal<string | null>(null);
-
-  books = toSignal(this.refresh$.pipe(switchMap(() => this.service.getBooks().pipe(
-      catchError((_err) => {
-        this.error.set('No s\'han pogut carregar els llibres.');
-        return of([] as Book[]);
-      })
-    ))
-  ), {
-    initialValue: [] as Book[],
-  });
-
+  bookState = inject(BookService);
   selectedBookId = signal<string | null>(null);
+
+  constructor() {
+    this.bookState.loadBooks();
+  }
 
   selectBook(id: string) {
     this.selectedBookId.set(id);
   }
 
   addBook() {
-    const newBook = {
+    this.bookState.addBook({
       title: 'Apegos Feroces',
       author: 'Vivian Gornik',
       category: 'Biografia',
-    };
-    this.service.addBook(newBook).subscribe({
-      next: () => this.refresh$.next(),
-      error: (err) => console.error('Error afegint el llibre', err),
     });
   }
 
   updateBook(book: Book) {
-    this.service.updateBook(book).subscribe({
-      next: () => {
-        this.refresh$.next();
-      }
-    })
+    this.bookState.updateBook(book);
   }
 
   deleteBook(id: string) {
-    this.service.deleteBook(id).subscribe({
-      next: () => {
-        this.selectedBookId.update(current => current === id ? null : current);
-        this.refresh$.next();
-      },
-    });
+    if (this.selectedBookId() === id) this.selectedBookId.set(null);
+    this.bookState.removeBook(id);
+  }
+
+  removeSelected() {
+    if (window.confirm(`Segur que vols eliminar ${this.bookState.selectedCount()} llibres?`)) {
+      this.bookState.removeSelectedBooks();
+    }
   }
 }
