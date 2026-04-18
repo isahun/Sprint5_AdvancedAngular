@@ -2,13 +2,15 @@
   <h1 class="text-3xl font-semibold mb-5">Llista de llibres</h1>
 
   <ul class="flex flex-col gap-4 text-2xl font-light">
-
     @for (book of service.books(); track book.id) {
-
-    <li>
-      <a [routerLink]="['/books', book.id]"><span> {{ book.title }}</span></a>
-    </li>
+      <li class="flex items-center justify-center gap-3">
+        <a [routerLink]="['/books', book.id]">{{ book.title }}</a>
+        <!-- Calls removeBook() → signal updates → effect persists to localStorage -->
+        <button (click)="service.removeBook(book.id)" class="back-btn text-xs">✕</button>
+      </li>
     }
-
   </ul>
+
+  <!-- Resets signal to DEFAULT_BOOKS and clears localStorage -->
+  <button (click)="service.resetBooks()" class="back-btn">Reiniciar llibres</button>
 </section>
