@@ -1,14 +1,17 @@
 <section class="list-container m-auto flex flex-col gap-4 p-10 text-center bg-amber-50">
   <h1 class="text-3xl font-semibold mb-5">Llista de llibres</h1>
 
-  <ul class="flex flex-col gap-4 text-2xl font-light">
+  <ul class="flex flex-col gap-4 text-2xl font-light p-5">
 
     @for (book of service.books(); track book.id) {
 
-    <li>
+    <li class="flex flex-row items-center justify-center gap-5">
       <a [routerLink]="['/books', book.id]"><span> {{ book.title }}</span></a>
+      <button (click)="service.removeBook(book.id)" class="rm-btn">✕</button>
     </li>
     }
 
   </ul>
+  <button (click)="service.resetBooks()" class="back-btn">Reiniciar llibres</button>
+
 </section>
