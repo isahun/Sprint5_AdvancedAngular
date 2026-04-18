@@ -11,5 +11,9 @@
 }
 
 .book-details {
-  @apply italic font-serif font-light
+  @apply italic font-serif font-light;
+}
+
+.rm-btn {
+  @apply rounded-2xl cursor-pointer bg-amber-400 text-amber-950 font-medium text-sm p-2;
 }
