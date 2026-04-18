@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy  } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject  } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-layout',
@@ -8,4 +9,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './layout.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Layout {}
+export class Layout {
+  themeService = inject(ThemeService);
+}
