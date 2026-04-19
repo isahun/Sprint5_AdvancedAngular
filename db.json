@@ -1,4 +1,18 @@
 {
+  "auth": {
+    "users": [
+      { "id": "user1", "email": "user@example.com", "password": "password123", "username": "TestUser", "roles": ["user"] },
+      { "id": "admin1", "email": "admin@example.com", "password": "admin123", "username": "AdminUser", "roles": ["user", "admin"] }
+    ]
+  },
+  "login": {
+    "POST": "/auth/login",
+    "response": {
+      "user": { "id": ":id", "email": ":email", "username": ":username", "roles": ":roles" },
+      "accessToken": "mock-jwt-token-for-:id",
+      "expiresIn": 3600
+    }
+  },
   "books": [
     {
       "id": "1",
@@ -24,6 +38,5 @@
       "category": "Biografia",
       "id": "DD2Ls8ZLFqQ"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }
