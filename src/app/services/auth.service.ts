@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 
 export class AuthService {
-  private readonly API_URL = 'http://localhost:3001';
+  private readonly API_URL = 'http://localhost:3000';
   private http = inject(HttpClient);
   private router = inject(Router);
 
@@ -81,7 +81,7 @@ export class AuthService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error del client: ${error.error.message}`;
     } else {
-      errorMessage = `Error del servidor: ${error.status}, ${error.error?.message || error.statusText}`;
+      errorMessage = `Error del servidor: ${error.status}, ${error.error?.message || error.message}`;
     }
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
