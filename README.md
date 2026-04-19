@@ -1,6 +1,6 @@
-# Book App - Sprint 5.01 - 5.09: Advanced Angular
+# Book App - Sprint 5.01 - 5.11: Advanced Angular
 
-This repository contains a book-browsing Angular application developed across nine activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
+This repository contains a book-browsing Angular application developed across eleven activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
 
 
 ## Activity Overview
@@ -160,6 +160,52 @@ The goal of this activity was to implement cross-cutting reactive features using
 * **Updated `feature/hardcodedData` branch**: replaced the hardcoded signal-based book array in `BooksService` with a `localStorage`-backed implementation, as required by the 5.09 exercise brief. Books are loaded from `localStorage` on init and written back on every mutation.
 
 
+### 5.10 — Authentication Service with Signals and Login Form
+
+The goal of this activity was to implement a client-side authentication system using Angular Signals and Reactive Forms, backed by a simulated REST API via json-server.
+
+**Objectives:**
+* Create an `AuthService` with `signal()`-based state for the current user and authentication status.
+* Implement `login()` and `logout()` methods.
+* Develop a `LoginComponent` with Reactive Forms.
+* Persist authentication state across page reloads using `localStorage`.
+* Display authentication state in the UI (username, login/logout button).
+
+**Steps performed:**
+* Created `User` and `AuthResponse` interfaces in `src/app/interfaces/`.
+* Generated `AuthService` with two signals: `currentUser` and `isAuthenticated`. An `effect()` keeps them in sync and persists `currentUser` to `localStorage`.
+* Implemented `login()` as a `GET /users?email=&password=` query (adapted for json-server v1, which does not support custom route mappings or POST simulation).
+* Implemented `logout()` to clear the signal and redirect to `/login`.
+* Added `getToken()` and `hasRole()` helper methods for use by guards in the next activity.
+* Generated `LoginComponent` with a `FormGroup` using `Validators.required` and `Validators.email`. Errors display conditionally with `@if` blocks.
+* Added the `/login` route outside `Layout` so unauthenticated users can access it without triggering the guard.
+* Integrated login/logout controls and the username display into the `Layout` navbar.
+* Updated `db.json` to a flat `users` array compatible with json-server v1 (removed the nested `auth.users` object and the non-functional `login` mock block).
+* Redesigned the navbar: dark `slate-900` bar, brand left · links centre · actions right, fully responsive with a hamburger menu for mobile (mobile-first with `md:` breakpoints).
+* Reorganised `styles.css`: removed obsolete classes (`.theme-btn`, `body.dark-theme nav`), moved `.active-link` to `layout.css`, and grouped remaining global styles by section.
+* Aligned the login page with the project's amber colour palette and ensured dark-mode coverage via existing global overrides.
+
+
+### 5.11 — Route Protection with Guards and Role Control
+
+The goal of this activity was to restrict access to certain application routes using Angular functional guards, redirecting unauthenticated users to the login page and unauthorised users to a dedicated error page.
+
+**Objectives:**
+* Create a functional `AuthGuard` using `CanActivateFn`.
+* Implement redirect logic for unauthenticated users.
+* Extend the guard to check user roles from route `data`.
+* Protect routes in `app.routes.ts`.
+
+**Steps performed:**
+* Generated `src/app/guards/auth-guard.ts` as a functional guard (`CanActivateFn`). It reads `authService.isAuthenticated()` (a Signal — no Observable needed) and either returns `true`, redirects to `/login`, or redirects to `/unauthorized` if the required roles are not met.
+* Applied `canActivate: [authGuard]` to the `Layout` route to protect all child routes in a single declaration.
+* Added a nested `admin` child route with `data: { roles: ['admin'] }` and a second `canActivate: [authGuard]` to enforce role checking at that level.
+* Placed the `unauthorized` route before the `**` wildcard to ensure it is reachable.
+* Created `UnauthorizedComponent` (403 page) with a back link using the global `.back-btn` class.
+* Created `AdminComponent` showing the logged-in username, accessible only to users with the `admin` role.
+* Added a conditional admin link to the navbar using `authService.hasRole(['admin'])`.
+
+
 ## Testing
 
 The project uses **Vitest** with Angular's `TestBed`. Tests are written and ready to run — no additional setup required.
@@ -184,6 +230,7 @@ The remaining spec files (components and services) contain the default Angular s
 | Branch | Description |
 |---|---|
 | `main` | Final state — activities 5.04 to 5.09 including HTTP, Signals, global state and theme |
+| `feature/authService` | Activities 5.10–5.11: `AuthService`, `LoginComponent`, `AuthGuard`, role-based route protection |
 | `feature/hardcodedData` | State after 5.01–5.03 updated with `localStorage` persistence (required by 5.09) |
 | `hardcodedCommented` | Same as `feature/hardcodedData` with explanatory comments in Catalan |
 | `crudCommented` | Extended version with full CRUD operations, with comments |
@@ -214,8 +261,8 @@ npm install
 This project requires two servers running in parallel: the Angular dev server and the json-server mock API.
 
 ```bash
-# Terminal 1 — Mock REST API (http://localhost:3000)
-npx json-server db.json
+# Terminal 1 — Mock REST API (http://localhost:3001)
+npx json-server db.json --port 3001
 
 # Terminal 2 — Angular dev server (http://localhost:4200)
 ng serve --open
@@ -228,18 +275,29 @@ ng serve --open
 ```
 src/app/
 ├── interfaces/
-│   └── book.interface.ts         # Book data model
+│   ├── book.interface.ts          # Book data model
+│   ├── user.interface.ts          # User model (id, email, username, token, roles)
+│   └── auth-response.interface.ts # AuthResponse model
 ├── environments/
-│   └── environment.ts            # API URL config (apiUrl)
+│   └── environment.ts             # API URL config (apiUrl)
+├── guards/
+│   └── auth-guard.ts              # Functional CanActivateFn: auth + role check
 ├── services/
-│   └── books-service.ts          # HTTP service: GET /books with error handling
+│   ├── books-service.ts           # HTTP service: GET /books with error handling
+│   ├── auth.service.ts            # AuthService: signals, login/logout, localStorage
+│   └── theme.service.ts           # ThemeService: dark/light toggle with effect()
 ├── layout/
-│   └── layout.ts / .html / .css  # Shared shell: nav bar + <router-outlet>
+│   └── layout.ts / .html / .css   # Shared shell: responsive navbar + <router-outlet>
+├── components/
+│   ├── login/                     # LoginComponent with Reactive Forms
+│   └── book-edit-component/       # Inline edit form for book fields
 └── pages/
-    ├── home/                     # Landing page
-    ├── book-list/                # List of all books with dynamic route links
-    ├── book-details/             # Detail view (input() + computed() for route param)
-    └── not-found/                # 404 fallback with programmatic back navigation
+    ├── home/                      # Landing page
+    ├── book-list/                 # List with multi-select and CRUD actions
+    ├── book-details/              # Detail view (input() + computed() for route param)
+    ├── admin/                     # Admin dashboard (role-protected)
+    ├── unauthorized/              # 403 page for insufficient permissions
+    └── not-found/                 # 404 fallback with programmatic back navigation
 ```
 
 
@@ -278,7 +336,16 @@ src/app/
 | `effect()` to sync state with browser APIs | 5.09 | `ThemeService` |
 | `localStorage` persistence via `effect()` | 5.09 | `ThemeService`, `feature/hardcodedData` branch |
 | Theme toggle (dark/light) | 5.09 | `Layout`, `ThemeService`, `styles.css` |
-| Tailwind CSS | 5.01–5.09 | Throughout |
+| `signal()` for auth state (`currentUser`, `isAuthenticated`) | 5.10 | `AuthService` |
+| `effect()` to persist user session to `localStorage` | 5.10 | `AuthService` |
+| Reactive Forms with `FormGroup`, `FormControl`, `Validators` | 5.10 | `LoginComponent` |
+| `ChangeDetectionStrategy.OnPush` with signals in auth flow | 5.10 | `LoginComponent`, `Layout` |
+| Mobile-first responsive navbar with hamburger menu | 5.10 | `Layout` |
+| Functional guard with `CanActivateFn` | 5.11 | `auth-guard.ts` |
+| Role-based access control via `route.data['roles']` | 5.11 | `auth-guard.ts`, `app.routes.ts` |
+| `router.parseUrl()` for guard redirects | 5.11 | `auth-guard.ts` |
+| Lazy-loaded components with `loadComponent` | 5.11 | `admin`, `unauthorized` routes |
+| Tailwind CSS | 5.01–5.11 | Throughout |
 
 
 ---
