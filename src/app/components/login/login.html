@@ -1,15 +1,22 @@
+<!-- min-h-[calc(100vh-8rem)]: alçada mínima = pantalla sencera menys la navbar i footer -->
 <main class="flex items-center justify-center min-h-[calc(100vh-8rem)]">
   <section class="bg-amber-50 p-8 rounded-2xl shadow-md w-full max-w-md">
     <h1 class="text-2xl font-bold mb-6 text-center">
       Inicia Sessió
     </h1>
 
+    <!-- [formGroup]="loginForm": connecta el <form> amb el FormGroup definit al .ts -->
+    <!-- (ngSubmit): event del formulari que crida onSubmit() en lloc de l'acció HTML per defecte -->
+    <!-- novalidate: desactiva la validació nativa del navegador (usem la d'Angular) -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5" novalidate>
 
       <div>
         <label for="email" class="block text-sm font-medium mb-1">
           Correu electrònic
         </label>
+        <!-- formControlName="email": vincula aquest input amb el FormControl 'email' del FormGroup -->
+        <!-- [attr.aria-invalid]: accessibilitat — indica als lectors de pantalla si el camp és invàlid -->
+        <!-- aria-describedby: apunta a l'id del missatge d'error per associar-los -->
         <input
           type="email"
           id="email"
@@ -20,6 +27,8 @@
           class="login-input"
           [class.border-red-400]="loginForm.controls['email'].invalid && loginForm.controls['email'].touched"
         />
+        <!-- @if: l'error només és visible quan el camp és invàlid I l'usuari l'ha tocat -->
+        <!-- Sense .touched, l'error apareixeria en carregar la pàgina (mala UX) -->
         @if (loginForm.controls['email'].invalid && loginForm.controls['email'].touched) {
           <p id="email-error" class="text-red-500 text-xs mt-1">
             Si us plau, introdueix un correu electrònic vàlid.
@@ -48,12 +57,18 @@
         }
       </div>
 
+      <!-- Error de negoci (credencials incorrectes), separat dels errors de validació del formulari -->
+      <!-- role="alert": el lector de pantalla l'anuncia automàticament quan apareix -->
       @if (errorMessage()) {
         <p role="alert" class="text-red-500 text-center text-sm font-medium">
           {{ errorMessage() }}
         </p>
       }
 
+      <!-- [disabled]: desactiva el botó si el formulari no és vàlid (evita enviaments buits) -->
+      <!-- [attr.aria-disabled]: versió accessible de disabled per lectors de pantalla -->
+      <!-- [class.opacity-50]: feedback visual que el botó no és clicable -->
+      <!-- [class.cursor-not-allowed]: canvia el cursor per indicar que no es pot clicar -->
       <button
         type="submit"
         [disabled]="loginForm.invalid"
