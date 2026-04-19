@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 
 export class AuthService {
-  private readonly API_URL = 'http://localhost:3000';
+  private readonly API_URL = 'http://localhost:3001';
   private http = inject(HttpClient);
   private router = inject(Router);
 
