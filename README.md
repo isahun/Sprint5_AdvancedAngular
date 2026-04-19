@@ -261,8 +261,8 @@ npm install
 This project requires two servers running in parallel: the Angular dev server and the json-server mock API.
 
 ```bash
-# Terminal 1 — Mock REST API (http://localhost:3001)
-npx json-server db.json --port 3001
+# Terminal 1 — Mock REST API (http://localhost:3000)
+npx json-server db.json
 
 # Terminal 2 — Angular dev server (http://localhost:4200)
 ng serve --open
