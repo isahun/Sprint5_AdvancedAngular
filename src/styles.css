@@ -1,31 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
 
-.active-link {
-  @apply font-bold underline text-amber-300;
-}
-
-.back-btn {
-  @apply rounded-2xl cursor-pointer bg-amber-400 text-amber-950 font-medium text-sm p-3 justify-center m-auto;
-}
-
-.back-btn:hover {
-  @apply bg-amber-950 text-amber-400;
-}
-
-.save-btn {
-  @apply rounded-2xl cursor-pointer bg-amber-100 text-amber-950 font-medium text-sm p-3 justify-center m-auto shadow-amber-950;
-}
-
-.save-btn:hover {
-  @apply bg-amber-950 text-amber-100;
-}
-
-.book-details {
-  @apply italic font-serif font-light;
-}
-
+/* === Tema global === */
 body.light-theme {
   @apply bg-amber-50 text-slate-900;
 }
@@ -34,24 +9,22 @@ body.dark-theme {
   @apply bg-slate-950 text-amber-50;
 }
 
-body.dark-theme nav {
-  @apply bg-blue-950;
-}
-
-body.dark-theme .bg-amber-50 {
-  @apply bg-slate-900!;
-}
-
-body.dark-theme .bg-orange-300 {
-  @apply bg-slate-800;
-}
-
+/* === Inputs en mode fosc === */
 body.dark-theme input {
   @apply bg-slate-800 border-amber-800 text-amber-100!;
 }
 
 body.dark-theme input::placeholder {
   @apply text-slate-500;
+}
+
+/* === Botons compartits entre components === */
+.back-btn {
+  @apply rounded-2xl cursor-pointer bg-amber-400 text-amber-950 font-medium text-sm p-3 m-auto;
+}
+
+.back-btn:hover {
+  @apply bg-amber-950 text-amber-400;
 }
 
 body.dark-theme .back-btn {
@@ -62,6 +35,14 @@ body.dark-theme .back-btn:hover {
   @apply bg-amber-200 text-amber-800;
 }
 
+.save-btn {
+  @apply rounded-2xl cursor-pointer bg-amber-100 text-amber-950 font-medium text-sm p-3 m-auto;
+}
+
+.save-btn:hover {
+  @apply bg-amber-950 text-amber-100;
+}
+
 body.dark-theme .save-btn {
   @apply bg-amber-900 text-amber-100;
 }
@@ -70,17 +51,21 @@ body.dark-theme .save-btn:hover {
   @apply bg-amber-100 text-amber-900;
 }
 
-.light-theme .theme-btn {
-@apply  bg-amber-200 text-amber-950
+/* === Tipografia compartida === */
+.book-details {
+  @apply italic font-serif font-light;
 }
 
-.light-theme .theme-btn:hover {
-@apply  bg-amber-950 text-amber-200
+/* === Login === */
+.login-input {
+  @apply w-full border border-amber-300 rounded-lg px-3 py-2 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400 transition;
 }
 
-.dark-theme .theme-btn {
-@apply  bg-amber-700 text-amber-100
+/* === Overrides de fons en mode fosc === */
+body.dark-theme .bg-amber-50 {
+  @apply bg-slate-900!;
 }
-.dark-theme .theme-btn:hover {
-@apply  bg-amber-100 text-amber-700
+
+body.dark-theme .bg-orange-300 {
+  @apply bg-slate-800;
 }

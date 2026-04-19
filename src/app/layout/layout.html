@@ -1,18 +1,110 @@
-<section class="m-10">
-  <header>
-  </header>
+<div class="min-h-screen flex flex-col">
 
-  <nav class="bg-blue-500 text-amber-100 text-2xl flex gap-5 p-8 justify-evenly mb-10 m-5 rounded-4xl">
-    <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Inici</a>
-    <a routerLink="books" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Llibres</a>
-    <button (click)="themeService.toggleTheme()" class="theme-btn cursor-pointer text-xs rounded-3xl p-3">
-      {{ themeService.theme() === 'light' ? '🌙 Canvia a fosc' : '☀️ Canvia a clar' }}
-    </button>
+  <nav class="bg-slate-900 text-white shadow-lg">
+
+    <!-- Barra principal: sempre visible -->
+    <div class="px-6 py-3 flex items-center justify-between">
+
+      <a routerLink="/" (click)="closeMenu()"
+        class="text-base font-bold tracking-wide hover:text-indigo-400 transition-colors duration-200">
+        📚 Biblioteca
+      </a>
+
+      <!-- Links i accions: visibles només a md+ -->
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+        <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }"
+          class="text-slate-300 hover:text-white transition-colors duration-200 pb-0.5">
+          Inici
+        </a>
+        <a routerLink="books" routerLinkActive="active-link"
+          class="text-slate-300 hover:text-white transition-colors duration-200 pb-0.5">
+          Llibres
+        </a>
+      </div>
+
+      <div class="hidden md:flex items-center gap-3 text-sm">
+        @if (authService.isAuthenticated()) {
+        <span class="text-slate-400 text-xs">{{ authService.currentUser()?.username }}</span>
+        <button (click)="authService.logout()"
+          class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded text-xs font-medium transition-colors duration-200 cursor-pointer">
+          Tancar sessió
+        </button>
+        } @else {
+        <a routerLink="/login"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded text-xs font-medium transition-colors duration-200">
+          Iniciar sessió
+        </a>
+        }
+        <button (click)="themeService.toggleTheme()"
+          class="text-slate-400 hover:text-white hover:bg-slate-700 transition-colors duration-200 p-1.5 rounded cursor-pointer text-base"
+          [attr.aria-label]="themeService.theme() === 'light' ? 'Canvia a mode fosc' : 'Canvia a mode clar'">
+          {{ themeService.theme() === 'light' ? '🌙' : '☀️' }}
+        </button>
+
+        @if (authService.hasRole(['admin'])) {
+        <a routerLink="/admin"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded text-xs font-medium transition-colors duration-200">Admin</a>
+          }
+      </div>
+
+      <!-- Botó hamburger: visible només a mòbil -->
+      <button (click)="toggleMenu()"
+        class="md:hidden text-slate-300 hover:text-white p-2 rounded hover:bg-slate-700 transition-colors duration-200 cursor-pointer"
+        [attr.aria-label]="menuOpen() ? 'Tanca el menú' : 'Obre el menú'" [attr.aria-expanded]="menuOpen()">
+        @if (menuOpen()) {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        }
+      </button>
+
+    </div>
+
+    <!-- Menú mòbil: s'obre cap avall -->
+    @if (menuOpen()) {
+    <div class="md:hidden border-t border-slate-700 px-6 py-4 flex flex-col gap-4 text-sm">
+      <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()"
+        class="text-slate-300 hover:text-white transition-colors duration-200">
+        Inici
+      </a>
+      <a routerLink="books" routerLinkActive="active-link" (click)="closeMenu()"
+        class="text-slate-300 hover:text-white transition-colors duration-200">
+        Llibres
+      </a>
+
+      <div class="border-t border-slate-700 pt-4 flex flex-col gap-3">
+        @if (authService.isAuthenticated()) {
+        <span class="text-slate-400 text-xs">{{ authService.currentUser()?.username }}</span>
+        <button (click)="authService.logout(); closeMenu()"
+          class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-2xl text-xs font-medium transition-colors duration-200 cursor-pointer text-left mr-auto">
+          Tancar sessió
+        </button>
+        } @else {
+        <a routerLink="/login" (click)="closeMenu()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-xs font-medium transition-colors duration-200 text-center">
+          Iniciar sessió
+        </a>
+        }
+        <button (click)="themeService.toggleTheme()"
+          class="text-slate-300 hover:text-white text-left text-xs transition-colors duration-200 cursor-pointer">
+          {{ themeService.theme() === 'light' ? '🌙 Canvia a mode fosc' : '☀️ Canvia a mode clar' }}
+        </button>
+      </div>
+    </div>
+    }
+
   </nav>
 
-  <main>
+  <main class="flex-1 container mx-auto px-6 py-8">
     <router-outlet></router-outlet>
   </main>
 
-  <footer></footer>
-</section>
+  <footer class="bg-slate-900 text-slate-500 text-center text-xs py-4">
+    Biblioteca Digital © 2025
+  </footer>
+
+</div>

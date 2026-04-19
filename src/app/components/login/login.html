@@ -1,0 +1,70 @@
+<main class="flex items-center justify-center min-h-[calc(100vh-8rem)]">
+  <section class="bg-amber-50 p-8 rounded-2xl shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">
+      Inicia Sessió
+    </h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5" novalidate>
+
+      <div>
+        <label for="email" class="block text-sm font-medium mb-1">
+          Correu electrònic
+        </label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          autocomplete="email"
+          [attr.aria-invalid]="loginForm.controls['email'].invalid && loginForm.controls['email'].touched"
+          aria-describedby="email-error"
+          class="login-input"
+          [class.border-red-400]="loginForm.controls['email'].invalid && loginForm.controls['email'].touched"
+        />
+        @if (loginForm.controls['email'].invalid && loginForm.controls['email'].touched) {
+          <p id="email-error" class="text-red-500 text-xs mt-1">
+            Si us plau, introdueix un correu electrònic vàlid.
+          </p>
+        }
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium mb-1">
+          Contrasenya
+        </label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          autocomplete="current-password"
+          [attr.aria-invalid]="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
+          aria-describedby="password-error"
+          class="login-input"
+          [class.border-red-400]="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
+        />
+        @if (loginForm.controls['password'].invalid && loginForm.controls['password'].touched) {
+          <p id="password-error" class="text-red-500 text-xs mt-1">
+            La contrasenya és requerida.
+          </p>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p role="alert" class="text-red-500 text-center text-sm font-medium">
+          {{ errorMessage() }}
+        </p>
+      }
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid"
+        [attr.aria-disabled]="loginForm.invalid"
+        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 cursor-pointer"
+        [class.opacity-50]="loginForm.invalid"
+        [class.cursor-not-allowed]="loginForm.invalid"
+      >
+        Iniciar Sessió
+      </button>
+
+    </form>
+  </section>
+</main>

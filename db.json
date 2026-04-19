@@ -1,4 +1,8 @@
 {
+    "users": [
+      { "id": "user1", "email": "user@example.com", "password": "password123", "username": "TestUser", "roles": ["user"] },
+      { "id": "admin1", "email": "admin@example.com", "password": "admin123", "username": "AdminUser", "roles": ["user", "admin"] }
+    ],
   "books": [
     {
       "id": "1",
@@ -24,6 +28,5 @@
       "category": "Biografia",
       "id": "DD2Ls8ZLFqQ"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }

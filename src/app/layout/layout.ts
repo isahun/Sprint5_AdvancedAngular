@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, inject  } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ThemeService } from '../services/theme.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -11,4 +12,14 @@ import { ThemeService } from '../services/theme.service';
 })
 export class Layout {
   themeService = inject(ThemeService);
+  authService = inject(AuthService);
+  menuOpen = signal(false);
+
+  toggleMenu() {
+    this.menuOpen.update(open => !open);
+  }
+
+  closeMenu() {
+    this.menuOpen.set(false);
+  }
 }
