@@ -1,6 +1,6 @@
-# Book App - Sprint 5.01 - 5.07: Advanced Angular
+# Book App - Sprint 5.01 - 5.09: Advanced Angular
 
-This repository contains a book-browsing Angular application developed across four activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
+This repository contains a book-browsing Angular application developed across nine activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
 
 
 ## Activity Overview
@@ -128,6 +128,38 @@ The goal of this activity was to refactor existing components to use Angular Sig
 * Fixed an unused variable warning in `catchError` by renaming `err` to `_err`.
 
 
+### 5.08 — Global State Management with Signals in Services
+
+The goal of this activity was to lift local component state up into a shared service so that multiple components can consume and mutate the same reactive state without prop-drilling.
+
+**Objectives:**
+* Move component-local signals into a shared Angular service.
+* Expose derived state via `computed()` in the service.
+* Allow multi-selection of books from the list view.
+
+**Steps performed:**
+* Created `BookService` (distinct from `BookApiService`) with signals for the books array, the selected book ID, and a set of multi-selected book IDs.
+* Exposed `computed()` signals: `selectedBook`, `selectedCount`, and `hasSelection`.
+* Refactored `BookList` to read and write state exclusively through `BookService`, removing all local signals that duplicated service state.
+* Added a multi-selection UI to `BookList`: checkboxes per book row and a bulk-action bar that shows when one or more books are selected.
+
+
+### 5.09 — Advanced Signal Patterns and Effects
+
+The goal of this activity was to implement cross-cutting reactive features using `effect()` and to demonstrate persistence patterns with `localStorage`.
+
+**Objectives:**
+* Use `effect()` to synchronise application state with browser APIs.
+* Implement a theme toggle (dark/light) that persists across page reloads.
+* Apply advanced signal patterns in a real-world scenario.
+
+**Steps performed:**
+* Created `ThemeService` with a `theme` signal initialised from `localStorage` and an `effect()` that applies the corresponding CSS class to `<body>` and persists the choice to `localStorage` on every change.
+* Added a theme toggle button to `Layout` that calls `ThemeService.toggle()`.
+* Added `dark` and `light` CSS class rules to `styles.css` for the full-app theme switch.
+* **Updated `feature/hardcodedData` branch**: replaced the hardcoded signal-based book array in `BooksService` with a `localStorage`-backed implementation, as required by the 5.09 exercise brief. Books are loaded from `localStorage` on init and written back on every mutation.
+
+
 ## Testing
 
 The project uses **Vitest** with Angular's `TestBed`. Tests are written and ready to run — no additional setup required.
@@ -151,11 +183,12 @@ The remaining spec files (components and services) contain the default Angular s
 
 | Branch | Description |
 |---|---|
-| `main` | Final state — activities 5.04 to 5.07 including HTTP and Signals |
-| `feature/hardcodedData` | State after 5.01–5.03, before HTTP (hardcoded mock data) |
+| `main` | Final state — activities 5.04 to 5.09 including HTTP, Signals, global state and theme |
+| `feature/hardcodedData` | State after 5.01–5.03 updated with `localStorage` persistence (required by 5.09) |
 | `hardcodedCommented` | Same as `feature/hardcodedData` with explanatory comments in Catalan |
 | `crudCommented` | Extended version with full CRUD operations, with comments |
 | `feature/signals-local-state` | Signals refactor: `OnPush` on all components, `update()` in `deleteBook` |
+| `feature/global-state-signals` | Global state in `BookService` (5.08) + `ThemeService` with `effect()` (5.09) |
 
 
 ## Prerequisites
@@ -239,7 +272,13 @@ src/app/
 | `HttpTestingController` for HTTP unit tests | 5.06 | `book-api.service.spec.ts` |
 | `ChangeDetectionStrategy.OnPush` | 5.07 | All components |
 | `signal.update()` for conditional state update | 5.07 | `BookList.deleteBook()` |
-| Tailwind CSS | 5.01–5.07 | Throughout |
+| Global state signals in a shared service | 5.08 | `BookService` |
+| `computed()` for derived global state | 5.08 | `BookService` (`selectedBook`, `selectedCount`, `hasSelection`) |
+| Multi-selection UI with signals | 5.08 | `BookList` |
+| `effect()` to sync state with browser APIs | 5.09 | `ThemeService` |
+| `localStorage` persistence via `effect()` | 5.09 | `ThemeService`, `feature/hardcodedData` branch |
+| Theme toggle (dark/light) | 5.09 | `Layout`, `ThemeService`, `styles.css` |
+| Tailwind CSS | 5.01–5.09 | Throughout |
 
 
 ---
