@@ -15,12 +15,10 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  // Signals per gestionar l'estat d'autenticació
   currentUser = signal<User | null>(this.loadCurrentUser());
-  isAuthenticated = signal(false); // S'actualitzarà amb l'efecte
+  isAuthenticated = signal(false);
 
   constructor() {
-    // Efecte per actualitzar isAuthenticated i persistir l'usuari
     effect(() => {
       const user = this.currentUser();
       this.isAuthenticated.set(!!user);
@@ -60,8 +58,8 @@ export class AuthService {
   }
 
   logout(): void {
-    this.currentUser.set(null); // Neteja la Signal
-    this.router.navigate(['/login']); // Redirigeix a la pàgina d'inici de sessió
+    this.currentUser.set(null);
+    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
