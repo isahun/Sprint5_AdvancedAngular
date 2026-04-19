@@ -1,6 +1,6 @@
-# Book App - Sprint 5.01 - 5.11: Advanced Angular
+# Book App - Sprint 5.01 - 5.12: Advanced Angular
 
-This repository contains a book-browsing Angular application developed across eleven activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
+This repository contains a book-browsing Angular application developed across twelve activities in the Sprint 5 curriculum. The project is built incrementally: each activity adds a new layer of routing, services, and reactive patterns on top of the previous one.
 
 
 ## Activity Overview
@@ -203,7 +203,25 @@ The goal of this activity was to restrict access to certain application routes u
 * Placed the `unauthorized` route before the `**` wildcard to ensure it is reachable.
 * Created `UnauthorizedComponent` (403 page) with a back link using the global `.back-btn` class.
 * Created `AdminComponent` showing the logged-in username, accessible only to users with the `admin` role.
-* Added a conditional admin link to the navbar using `authService.hasRole(['admin'])`.
+* Added a conditional admin link to the navbar using `authService.hasRole(['admin'])`, both in the desktop bar and in the mobile hamburger menu.
+
+
+### 5.12 — HTTP Interceptor for Authorization Tokens
+
+The goal of this activity was to create an HTTP interceptor that automatically attaches the JWT token to all outgoing requests and handles authentication errors globally.
+
+**Objectives:**
+* Create a functional `AuthInterceptor`.
+* Attach the authentication token to the `Authorization` header.
+* Handle 401/403 errors to force logout.
+* Register the interceptor in `app.config.ts`.
+
+**Steps performed:**
+* Generated `src/app/interceptors/auth-interceptor.ts` as a functional `HttpInterceptorFn`.
+* If a token exists (`authService.getToken()`), the request is cloned with `Authorization: Bearer <token>` before being forwarded.
+* A `catchError` pipe handles 401 and 403 responses by calling `authService.logout()` and redirecting to `/login`.
+* Registered the interceptor in `app.config.ts` via `provideHttpClient(withInterceptors([authInterceptor]))`, replacing the previous bare `provideHttpClient()` call.
+* Fixed `AuthService` to unify the API base URL to port 3000 (matching `environment.apiUrl` used by `BookApiService`) and replaced the deprecated `error.statusText` with `error.message` in `handleError`.
 
 
 ## Testing
@@ -231,6 +249,7 @@ The remaining spec files (components and services) contain the default Angular s
 |---|---|
 | `main` | Final state — activities 5.04 to 5.09 including HTTP, Signals, global state and theme |
 | `feature/authService` | Activities 5.10–5.11: `AuthService`, `LoginComponent`, `AuthGuard`, role-based route protection |
+| `feature/httpInterceptor` | Activity 5.12: `AuthInterceptor` attaching Bearer token and handling 401/403 errors |
 | `feature/hardcodedData` | State after 5.01–5.03 updated with `localStorage` persistence (required by 5.09) |
 | `hardcodedCommented` | Same as `feature/hardcodedData` with explanatory comments in Catalan |
 | `crudCommented` | Extended version with full CRUD operations, with comments |
@@ -282,6 +301,8 @@ src/app/
 │   └── environment.ts             # API URL config (apiUrl)
 ├── guards/
 │   └── auth-guard.ts              # Functional CanActivateFn: auth + role check
+├── interceptors/
+│   └── auth-interceptor.ts        # HttpInterceptorFn: Bearer token + 401/403 handling
 ├── services/
 │   ├── books-service.ts           # HTTP service: GET /books with error handling
 │   ├── auth.service.ts            # AuthService: signals, login/logout, localStorage
@@ -345,7 +366,11 @@ src/app/
 | Role-based access control via `route.data['roles']` | 5.11 | `auth-guard.ts`, `app.routes.ts` |
 | `router.parseUrl()` for guard redirects | 5.11 | `auth-guard.ts` |
 | Lazy-loaded components with `loadComponent` | 5.11 | `admin`, `unauthorized` routes |
-| Tailwind CSS | 5.01–5.11 | Throughout |
+| Functional `HttpInterceptorFn` | 5.12 | `auth-interceptor.ts` |
+| Request cloning with `req.clone({ setHeaders })` | 5.12 | `auth-interceptor.ts` |
+| Global 401/403 error handling in interceptor | 5.12 | `auth-interceptor.ts` |
+| `provideHttpClient(withInterceptors([...]))` | 5.12 | `app.config.ts` |
+| Tailwind CSS | 5.01–5.12 | Throughout |
 
 
 ---
