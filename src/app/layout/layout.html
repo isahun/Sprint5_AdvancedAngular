@@ -44,7 +44,7 @@
         @if (authService.hasRole(['admin'])) {
         <a routerLink="/admin"
           class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded text-xs font-medium transition-colors duration-200">Admin</a>
-          }
+        }
       </div>
 
       <!-- Botó hamburger: visible només a mòbil -->
@@ -79,6 +79,13 @@
       <div class="border-t border-slate-700 pt-4 flex flex-col gap-3">
         @if (authService.isAuthenticated()) {
         <span class="text-slate-400 text-xs">{{ authService.currentUser()?.username }}</span>
+        @if (authService.hasRole(['admin'])) {
+        <a routerLink="/admin" (click)="closeMenu()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-xs mr-auto font-medium transition-colors duration-200 text-center">
+          Admin
+        </a>
+        }
+
         <button (click)="authService.logout(); closeMenu()"
           class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-2xl text-xs font-medium transition-colors duration-200 cursor-pointer text-left mr-auto">
           Tancar sessió
@@ -89,6 +96,7 @@
           Iniciar sessió
         </a>
         }
+
         <button (click)="themeService.toggleTheme()"
           class="text-slate-300 hover:text-white text-left text-xs transition-colors duration-200 cursor-pointer">
           {{ themeService.theme() === 'light' ? '🌙 Canvia a mode fosc' : '☀️ Canvia a mode clar' }}
