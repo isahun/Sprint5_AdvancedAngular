@@ -1,0 +1,67 @@
+<main class="flex items-center justify-center min-h-screen bg-gray-100">
+  <section class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Inicia Sessió</h1>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6" novalidate>
+
+      <div>
+        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">
+          Correu electrònic:
+        </label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          autocomplete="email"
+          [attr.aria-invalid]="loginForm.controls['email'].invalid && loginForm.controls['email'].touched"
+          aria-describedby="email-error"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          [class.border-red-500]="loginForm.controls['email'].invalid && loginForm.controls['email'].touched"
+        />
+        @if (loginForm.controls['email'].invalid && loginForm.controls['email'].touched) {
+          <p id="email-error" class="text-red-500 text-xs italic mt-1">
+            Si us plau, introdueix un correu electrònic vàlid.
+          </p>
+        }
+      </div>
+
+      <div>
+        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">
+          Contrasenya:
+        </label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          autocomplete="current-password"
+          [attr.aria-invalid]="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
+          aria-describedby="password-error"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          [class.border-red-500]="loginForm.controls['password'].invalid && loginForm.controls['password'].touched"
+        />
+        @if (loginForm.controls['password'].invalid && loginForm.controls['password'].touched) {
+          <p id="password-error" class="text-red-500 text-xs italic mt-1">
+            La contrasenya és requerida.
+          </p>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p role="alert" class="text-red-600 text-center font-medium">
+          {{ errorMessage() }}
+        </p>
+      }
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid"
+        [attr.aria-disabled]="loginForm.invalid"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300"
+        [class.opacity-50]="loginForm.invalid"
+      >
+        Iniciar Sessió
+      </button>
+
+    </form>
+  </section>
+</main>
