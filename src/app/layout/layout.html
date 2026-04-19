@@ -5,6 +5,18 @@
   <nav class="bg-blue-500 text-amber-100 text-2xl flex gap-5 p-8 justify-evenly mb-10 m-5 rounded-4xl">
     <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Inici</a>
     <a routerLink="books" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Llibres</a>
+
+    @if (authService.isAuthenticated()) {
+    <span class="text-sm self-center">{{ authService.currentUser()?.username }}</span>
+    <button (click)="authService.logout()" class="text-xs rounded-3xl p-3 bg-red-500 cursor-pointer">
+      Tancar sessió
+    </button>
+    } @else {
+    <a routerLink="/login" class="text-xs rounded-3xl p-3 bg-green-600 cursor-pointer">
+      Iniciar sessió
+    </a>
+    }
+
     <button (click)="themeService.toggleTheme()" class="theme-btn cursor-pointer text-xs rounded-3xl p-3">
       {{ themeService.theme() === 'light' ? '🌙 Canvia a fosc' : '☀️ Canvia a clar' }}
     </button>
