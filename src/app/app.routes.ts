@@ -18,6 +18,10 @@ export const routes: Routes = [
       { path: 'books', component: BookList },
       { path: 'books/:bookId', component: BookDetails },
       {
+        path: 'onpush-demo',
+        loadComponent: () => import('./pages/onpush-demo/onpush-demo').then(m => m.OnpushDemo),
+      },
+      {
         path: 'admin',
         loadComponent: () => import('./pages/admin/admin').then((m) => m.Admin),
         canActivate: [authGuard],

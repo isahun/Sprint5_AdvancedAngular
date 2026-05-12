@@ -2,10 +2,11 @@ import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/cor
 import { BookService } from '../../services/book.service';
 import { BookDetails } from '../book-details/book-details';
 import { Book } from '../../interfaces/book.interface';
+import { BookSearchComponent } from '../../components/book-search/book-search';
 
 @Component({
   selector: 'app-book-list',
-  imports: [BookDetails],
+  imports: [BookDetails, BookSearchComponent],
   templateUrl: './book-list.html',
   styleUrl: './book-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,8 @@ export class BookList {
       title: 'Apegos Feroces',
       author: 'Vivian Gornik',
       category: 'Biografia',
+      price: 20,
+      src: '',
     });
   }
 

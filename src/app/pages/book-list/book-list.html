@@ -1,6 +1,10 @@
 <section class="list-container rounded-3xl m-auto flex flex-col gap-4 p-10 text-center bg-amber-50">
   <h1 class="text-3xl font-semibold mb-5">Llista de llibres</h1>
 
+  <main class="container mx-auto mt-8 px-4">
+    <app-book-search></app-book-search>
+  </main>
+
   @if (selectedBookId()) {
   <app-book-details [bookId]="selectedBookId()!" (bookUpdated)="updateBook($event)" (bookDeleted)="deleteBook($event)"
     (goBack)="selectedBookId.set(null)"></app-book-details>
@@ -11,7 +15,7 @@
     @for (book of bookState.books(); track book.id) {
     <li class="flex flex-row items-center justify-center gap-3">
       <input type="checkbox" [checked]="bookState.selectedBookIds().has(book.id)"
-      (change)="bookState.toggleBookSelection(book.id)" class="w-5 h-5 m-5 cursor-pointer">
+        (change)="bookState.toggleBookSelection(book.id)" class="w-5 h-5 m-5 cursor-pointer">
       <span (click)="selectBook(book.id)" style="cursor: pointer">{{ book.title }}</span>
     </li>
     }
