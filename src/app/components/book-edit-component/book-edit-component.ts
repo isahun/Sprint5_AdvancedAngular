@@ -24,6 +24,8 @@ export class BookEditComponent {
   title = signal('');
   author = signal('');
   category = signal('');
+  price = signal(0);
+  src = signal('');
 
   bookSaved = output<Book>();
 
@@ -32,7 +34,9 @@ export class BookEditComponent {
       id: this.currentBook()!.id,
       title: this.title(),
       author: this.author(),
-      category: this.category()
+      price: this.price(),
+      category: this.category(),
+      src: this.src()
     });
   }
 
