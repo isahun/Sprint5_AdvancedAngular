@@ -1,184 +1,85 @@
 # Book App — Sprint 5.01–5.12: Advanced Angular
 
-A book management application built with **Angular 21** as part of the IT Academy Frontend BootCamp. Developed incrementally across twelve activities, the project explores Angular's routing system, HTTP communication, reactive state management, authentication, and application architecture.
+A book-browsing application developed as part of the Advanced Angular module of the IT Academy Frontend BootCamp.
 
-The application uses **json-server** as a mock REST API and demonstrates modern Angular patterns, including standalone components, Signals, functional route guards, and HTTP interceptors.
+The project was built incrementally across twelve activities, covering Angular routing, services, reactive state management, authentication flows, HTTP communication and application architecture.
+
+## Live Demo
+
+**[Open Book App](https://sprint5-advanced-angular.vercel.app/)**
+
+- **Frontend:** Deployed on Vercel.
+- **Backend API:** [https://book-app-api-nlx8.onrender.com](https://book-app-api-nlx8.onrender.com)
+
+The application uses a `json-server` REST API hosted on Render.
+
+> **Note:** The backend runs on Render's free tier and may take a little while to respond after periods of inactivity. Demo data is not guaranteed to persist permanently.
 
 ## Features
 
-- Browse and manage books with full CRUD operations.
-- View book details and edit existing entries.
-- Select multiple books and delete them in bulk.
-- Manage application state using Angular Signals.
-- Switch between light and dark themes, with preferences persisted in `localStorage`.
-- Sign in and out using a simulated authentication flow.
-- Protect routes and restrict access according to user roles.
-- Automatically attach an authorization header to outgoing HTTP requests.
-- Responsive navigation and mobile-friendly layout.
+- Book catalogue with API integration.
+- Book details and editing.
+- Create, update and delete books.
+- Bulk book selection and deletion.
+- Angular Signals for reactive state management.
+- Theme switching with localStorage persistence.
+- Simulated user authentication.
+- Role-based access control.
+- Route protection with Angular guards.
+- HTTP interceptor for authentication headers.
+- Responsive navigation and application layout.
 
 ## Activity Overview
 
-### 5.01 — Basic Routing and Static Routes
-
-- Configured Angular Router and created the initial navigation structure.
-- Generated standalone page components: `Home`, `BookList`, `BookDetails`, and `NotFound`.
-- Defined static routes and a wildcard fallback.
-- Implemented navigation with `routerLink` and `routerLinkActive`.
-- Installed Tailwind CSS and styled the navigation bar.
-
-### 5.02 — Dynamic Routes and Programmatic Navigation
-
-- Created the `Book` interface.
-- Implemented dynamic routes using book IDs.
-- Initially used a signal-based service containing mock book data.
-- Added navigation between the book list and detail views.
-- Refactored `BookDetails` to use `input()` and `computed()` instead of `ActivatedRoute` for route parameter handling.
-
-### 5.03 — Layout Component and Nested Routes
-
-- Created a reusable `Layout` component containing the navigation bar and `router-outlet`.
-- Restructured routes using nested child routes.
-- Simplified the root `App` component.
-- Configured `withComponentInputBinding()` to bind route parameters to component inputs.
-- Added programmatic navigation to the not-found page.
-
-### 5.04 — HTTP Data Fetching with HttpClient
-
-- Installed json-server and created a mock database in `db.json`.
-- Configured Angular `HttpClient`.
-- Replaced hardcoded book data with HTTP requests.
-- Introduced `BookApiService` to handle API communication.
-- Implemented error handling using RxJS `catchError`.
-- Centralised the API base URL in the environment configuration.
-- Explored converting Observables into Signals with `toSignal()`.
-
-### 5.05 — Full CRUD with HttpClient
-
-- Implemented `GET`, `POST`, `PUT`, and `DELETE` operations.
-- Created `BookEditComponent` for editing book information.
-- Used signal-based `input()` and `output()` APIs for component communication.
-- Used `effect()` to synchronise form fields with incoming book data.
-- Refactored the parent-child communication flow so that the parent manages book operations.
-
-### 5.06 — HTTP Service Testing with Vitest
-
-- Configured unit tests using Vitest and Angular's `TestBed`.
-- Created tests for `BookApiService`.
-- Used `HttpTestingController` to intercept and verify HTTP requests.
-- Tested CRUD operations and HTTP error handling.
-- Updated component tests to reflect the application's current structure.
-
-### 5.07 — Local Component State Management with Signals
-
-- Adopted Angular Signals for local state management.
-- Applied `ChangeDetectionStrategy.OnPush` to components.
-- Used `signal()`, `set()`, and `update()` to manage reactive state.
-- Refined conditional state updates when deleting books.
-
-### 5.08 — Global State Management with Signals in Services
-
-- Introduced `BookService` to manage shared book state independently of API communication.
-- Exposed read-only Signals for shared state.
-- Implemented multi-selection using a `Set` of selected book IDs.
-- Added bulk deletion functionality.
-- Refactored `BookList` to consume shared state through the service.
-
-### 5.09 — Advanced Signal Patterns and Effects
-
-- Created `ThemeService` to manage the application's theme.
-- Used `effect()` to synchronise theme changes with the DOM and `localStorage`.
-- Implemented a persistent light/dark theme toggle.
-- Explored browser storage as a persistence mechanism for application state.
-
-### 5.10 — Authentication Service with Signals and Login Form
-
-- Created `User` and `AuthResponse` interfaces.
-- Implemented `AuthService` using Angular Signals.
-- Developed a login form using Reactive Forms and validators.
-- Implemented login and logout functionality.
-- Persisted the current user in `localStorage`.
-- Added helper methods for retrieving the token and checking user roles.
-- Integrated authentication controls into the application layout.
-- Updated the navigation bar with responsive desktop and mobile layouts.
-
-### 5.11 — Route Protection with Guards and Role Control
-
-- Created a functional route guard using `CanActivateFn`.
-- Redirected unauthenticated users to the login page.
-- Implemented role-based access checks using route data.
-- Protected application routes and added an admin-only page.
-- Created a dedicated unauthorized-access page.
-- Added conditional navigation links based on user roles.
-
-### 5.12 — HTTP Interceptor for Authorization Tokens
-
-- Created a functional HTTP interceptor using `HttpInterceptorFn`.
-- Automatically attached a Bearer token to outgoing HTTP requests when available.
-- Used request cloning to set the `Authorization` header.
-- Implemented global handling for HTTP 401 and 403 responses.
-- Registered the interceptor through `provideHttpClient()` and `withInterceptors()`.
+| Activity | Description |
+|---|---|
+| 5.01 | Basic routing and navigation |
+| 5.02 | Route parameters and book details |
+| 5.03 | Services and dependency injection |
+| 5.04 | HTTP communication and API integration |
+| 5.05 | Reactive state management |
+| 5.06 | Angular Signals |
+| 5.07 | Component communication |
+| 5.08 | Book editing and CRUD operations |
+| 5.09 | Authentication |
+| 5.10 | Route guards and role-based access |
+| 5.11 | HTTP interceptors |
+| 5.12 | Final integration and application improvements |
 
 ## Authentication: Important Note
 
-The authentication flow is **simulated for learning purposes** and is not intended for production use.
+Authentication is simulated for learning and demonstration purposes.
 
-- User credentials are checked against the mock `users` collection provided by json-server.
-- The login request uses a `GET` query with email and password parameters.
-- A mock token is generated on the client side (`mock-jwt-{userId}`).
-- The current user is persisted in browser `localStorage`.
-- Functional guards demonstrate route protection and role-based navigation.
-- The HTTP interceptor demonstrates how an authorization token can be attached to outgoing requests and how authentication-related HTTP errors can be handled.
+The application:
 
-**This is not a secure authentication implementation.** Credentials are not verified by a real authentication server, the generated token is not a valid JWT, and client-side route guards do not provide backend access control. A production application would require server-side credential verification, secure token management, and authorization enforced by the backend.
+- Retrieves test users from the `json-server` API.
+- Checks credentials against the demo users collection.
+- Generates a mock token on the client side (`mock-jwt-{userId}`).
+- Stores the current user in localStorage.
+- Uses route guards and an HTTP interceptor to demonstrate protected routes and authenticated requests.
 
-## Testing
+This is **not production-ready authentication**. Credentials are stored in the demo database, and the generated token is not a real JWT. A production application would require a secure backend responsible for authentication, authorization, password hashing and token validation.
 
-The project uses **Vitest** with Angular's `TestBed`.
+### Demo credentials
 
-Run the test suite with:
+| Role | Email | Password |
+|---|---|---|
+| User | `user@example.com` | `password123` |
+| Admin | `admin@example.com` | `admin123` |
 
-```bash
-npx ng test --watch=false
-```
-
-The tests cover HTTP service operations, error handling, and component creation.
-
-The latest validation results:
-
-- **11 test files passed**
-- **16 tests passed**
-
-## Code Quality
-
-ESLint is configured using `angular-eslint`.
-
-Run linting with:
-
-```bash
-npx ng lint
-```
-
-Build the application with:
-
-```bash
-npx ng build
-```
+These credentials are public test accounts and must not be used for real services.
 
 ## Tech Stack
 
-| Technology | Purpose |
-|---|---|
-| Angular 21 | Frontend framework |
-| TypeScript | Application logic and type safety |
-| RxJS | Asynchronous operations and HTTP streams |
-| Angular Signals | Reactive state management |
-| Angular Router | Navigation and route protection |
-| Angular HttpClient | REST API communication |
-| Reactive Forms | Form handling and validation |
-| json-server | Mock REST API |
-| Vitest | Unit testing |
-| Tailwind CSS 4 | Utility-first styling |
-| ESLint / angular-eslint | Code quality and linting |
+- **Framework:** Angular 21
+- **Language:** TypeScript
+- **Reactive programming:** RxJS
+- **State management:** Angular Signals
+- **Styling:** Tailwind CSS
+- **Mock REST API:** json-server
+- **Testing:** Vitest
+- **Code quality:** ESLint with angular-eslint
+- **Deployment:** Vercel (frontend) and Render (backend)
 
 ## Project Structure
 
@@ -186,8 +87,8 @@ npx ng build
 src/
 ├── app/
 │   ├── components/
-│   │   ├── login/
-│   │   └── book-edit-component/
+│   │   ├── book-edit-component/
+│   │   └── login/
 │   ├── guards/
 │   │   └── auth-guard.ts
 │   ├── interceptors/
@@ -210,76 +111,119 @@ src/
 │       ├── book.service.ts
 │       └── theme.service.ts
 ├── environments/
-│   └── environment.ts
+│   ├── environment.ts
+│   └── environment.development.ts
 └── styles.css
+
+db.json
+angular.json
+package.json
 ```
 
 ## Getting Started
 
-### Prerequisites
+### Requirements
 
-- Node.js v22 or higher (v24 recommended)
-- npm 11 or higher
-- Angular CLI v21
+- Node.js
+- npm
+- Angular CLI (optional)
 
 ### Installation
 
-Clone the repository and install its dependencies:
+Clone the repository:
 
 ```bash
 git clone https://github.com/isahun/Sprint5_AdvancedAngular.git
-cd Sprint5_AdvancedAngular/book-app
+cd Sprint5_AdvancedAngular
 npm install
 ```
 
-### Running the Application
+### Run the mock API
 
-The application requires two processes running in parallel: json-server and the Angular development server.
-
-**Terminal 1 — Mock REST API**
+In a terminal, start json-server:
 
 ```bash
-npx json-server db.json
+npx json-server db.json --host 0.0.0.0 --port 3000
 ```
 
-The API will be available at `http://localhost:3000`.
+The API will be available at:
 
-**Terminal 2 — Angular application**
+`http://localhost:3000`
+
+### Run the Angular application
+
+In a second terminal:
 
 ```bash
-ng serve --open
+ng serve
 ```
 
-The application will be available at `http://localhost:4200`.
+Open `http://localhost:4200` in your browser.
 
-## Key Angular Concepts Practised
+### Environment configuration
 
-| Concept | Implementation |
-|---|---|
-| Standalone components | Application components |
-| Static and dynamic routing | `app.routes.ts` |
-| Nested routes | `Layout` |
-| Route parameter binding | `input()` |
-| Programmatic navigation | `Router.navigate()` |
-| Dependency injection | `inject()` |
-| HTTP requests | `BookApiService` |
-| RxJS error handling | `catchError()` |
-| Signals | `BookService`, `AuthService`, `ThemeService` |
-| Derived reactive state | `computed()` |
-| Reactive side effects | `effect()` |
-| Component communication | `input()` and `output()` |
-| Change detection | `OnPush` |
-| Global state management | Shared services |
-| Persistent browser storage | `localStorage` |
-| Functional route guards | `CanActivateFn` |
-| Role-based access | Route data and role checks |
-| Functional HTTP interceptors | `HttpInterceptorFn` |
-| HTTP unit testing | `HttpTestingController` |
-| Reactive Forms | Login form |
-| Utility-first styling | Tailwind CSS |
+The application uses separate environment configurations:
 
----
+- `environment.development.ts`: points to the local API (`http://localhost:3000`).
+- `environment.ts`: points to the deployed API on Render.
 
-**Author:** Irene V. Sahun — [GitHub](https://github.com/isahun)
+Angular automatically selects the appropriate configuration depending on the build target.
 
-Created as part of the **IT Academy Frontend BootCamp**.
+## Testing
+
+The project uses Vitest for unit testing.
+
+Run the test suite:
+
+```bash
+npx ng test --watch=false
+```
+
+**Latest reported test results:** 16 tests passed across 11 test files.
+
+## Code Quality and Production Build
+
+Run ESLint:
+
+```bash
+npx ng lint
+```
+
+Build the application:
+
+```bash
+npx ng build
+```
+
+## Deployment
+
+The application is deployed using two separate services:
+
+| Service | Platform | Purpose |
+|---|---|---|
+| Angular frontend | Vercel | Hosts the application |
+| Mock REST API | Render | Provides books and demo users |
+
+The production Angular build uses the Render API URL configured in `src/environments/environment.ts`.
+
+## Key Angular Concepts
+
+This project explores several Angular concepts and practices:
+
+- Standalone components.
+- Dependency injection.
+- Angular Router and route parameters.
+- Services and separation of concerns.
+- HTTP Client and REST API integration.
+- RxJS Observables and operators.
+- Signals and computed state.
+- Component inputs and outputs.
+- Route guards and HTTP interceptors.
+- Environment-specific configuration.
+- Unit testing and linting.
+
+## Author
+
+**Isahun**
+
+Developed as part of the IT Academy Frontend BootCamp — Advanced Angular module.
