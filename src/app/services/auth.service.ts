@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   login(credentials: { email: string; password: string }): Observable<AuthResponse> {
-    return this.http.get<any[]>(
+    return this.http.get<User[]>(
       `${this.API_URL}/users?email=${credentials.email}&password=${credentials.password}`
     ).pipe(
       map(users => {
