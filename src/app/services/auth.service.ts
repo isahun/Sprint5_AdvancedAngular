@@ -85,13 +85,19 @@ export class AuthService {
     return requiredRoles.some((role) => user.roles.includes(role));
   }
 
-  private handleError(error: HttpErrorResponse): Observable<never> {
+  private handleError(error: unknown): Observable<never> {
     let errorMessage = "S'ha produït un error d'autenticació!";
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error del client: ${error.error.message}`;
-    } else {
-      errorMessage = `Error del servidor: ${error.status}, ${error.error?.message || error.message}`;
+
+    if (error instanceof HttpErrorResponse) {
+      if (error.error instanceof ErrorEvent) {
+        errorMessage = `Error del client: ${error.error.message}`;
+      } else {
+        errorMessage = `Error del servidor: ${error.status}, ${error.error?.message || error.message}`;
+      }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
     }
+
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
