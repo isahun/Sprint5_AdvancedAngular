@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, effect } from '@angular/core';
+import { Injectable, inject, signal, effect, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -9,19 +9,17 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
-
 export class AuthService {
   private readonly API_URL = 'http://localhost:3000';
   private http = inject(HttpClient);
   private router = inject(Router);
 
   currentUser = signal<User | null>(this.loadCurrentUser());
-  isAuthenticated = signal(false);
+  isAuthenticated = computed(() => !!this.currentUser());
 
   constructor() {
     effect(() => {
       const user = this.currentUser();
-      this.isAuthenticated.set(!!user);
       if (user) {
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem('currentUser', JSON.stringify(user));
@@ -37,24 +35,26 @@ export class AuthService {
   private loadCurrentUser(): User | null {
     if (typeof localStorage !== 'undefined') {
       const storedUser = localStorage.getItem('currentUser');
-      return storedUser ? JSON.parse(storedUser) as User : null;
+      return storedUser ? (JSON.parse(storedUser) as User) : null;
     }
     return null;
   }
 
   login(credentials: { email: string; password: string }): Observable<AuthResponse> {
-    return this.http.get<User[]>(
-      `${this.API_URL}/users?email=${credentials.email}&password=${credentials.password}`
-    ).pipe(
-      map(users => {
-        if (users.length === 0) throw new Error('Credencials invàlides');
-        const u = users[0];
-        const user: User = { ...u, token: 'mock-jwt-' + u.id };
-        this.currentUser.set(user);
-        return { user: u, accessToken: user.token, expiresIn: 3600 } as AuthResponse;
-      }),
-      catchError(this.handleError)
-    );
+    return this.http
+      .get<
+        User[]
+      >(`${this.API_URL}/users?email=${credentials.email}&password=${credentials.password}`)
+      .pipe(
+        map((users) => {
+          if (users.length === 0) throw new Error('Credencials invàlides');
+          const u = users[0];
+          const user: User = { ...u, token: 'mock-jwt-' + u.id };
+          this.currentUser.set(user);
+          return { user: u, accessToken: user.token, expiresIn: 3600 } as AuthResponse;
+        }),
+        catchError(this.handleError),
+      );
   }
 
   logout(): void {
@@ -71,11 +71,11 @@ export class AuthService {
     if (!user || !user.roles) {
       return false;
     }
-    return requiredRoles.some(role => user.roles.includes(role));
+    return requiredRoles.some((role) => user.roles.includes(role));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'S\'ha produït un error d\'autenticació!';
+    let errorMessage = "S'ha produït un error d'autenticació!";
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error del client: ${error.error.message}`;
     } else {
@@ -85,4 +85,3 @@ export class AuthService {
     return throwError(() => new Error(errorMessage));
   }
 }
-
