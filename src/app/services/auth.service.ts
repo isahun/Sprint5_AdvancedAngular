@@ -33,11 +33,22 @@ export class AuthService {
   }
 
   private loadCurrentUser(): User | null {
-    if (typeof localStorage !== 'undefined') {
-      const storedUser = localStorage.getItem('currentUser');
-      return storedUser ? (JSON.parse(storedUser) as User) : null;
+    if (typeof localStorage === 'undefined') {
+      return null;
     }
-    return null;
+
+    const storedUser = localStorage.getItem('currentUser');
+
+    if (!storedUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(storedUser) as User;
+    } catch {
+      localStorage.removeItem('currentUser');
+      return null;
+    }
   }
 
   login(credentials: { email: string; password: string }): Observable<AuthResponse> {
