@@ -1,6 +1,4 @@
-import { Component, inject, input, computed, output, ChangeDetectionStrategy  } from '@angular/core';
-import { BooksService } from '../../services/books-service';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { BookEditComponent } from '../../components/book-edit-component/book-edit-component';
 import { Book } from '../../interfaces/book.interface';
 
@@ -12,22 +10,16 @@ import { Book } from '../../interfaces/book.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookDetails {
-  service = inject(BooksService);
-
-  bookId = input.required<string>();
+  book = input.required<Book>();
   bookDeleted = output<string>();
   bookUpdated = output<Book>();
   goBack = output<void>();
-
-  books = toSignal(this.service.getBooks(), { initialValue: [] as Book[] });
-
-  book = computed(() => this.books().find((b) => b.id === this.bookId()));
 
   onBookSaved(book: Book) {
     this.bookUpdated.emit(book);
   }
 
   deleteBook() {
-    this.bookDeleted.emit(this.bookId());
+    this.bookDeleted.emit(this.book().id);
   }
 }
