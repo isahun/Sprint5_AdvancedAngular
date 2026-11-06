@@ -5,12 +5,13 @@ import { catchError, map } from 'rxjs/operators';
 import { User } from '../interfaces/user.interface';
 import { AuthResponse } from '../interfaces/auth-response.interface';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:3000';
+  private readonly API_URL = environment.apiUrl;
   private http = inject(HttpClient);
   private router = inject(Router);
 
